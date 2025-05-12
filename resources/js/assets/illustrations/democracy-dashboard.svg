@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Illustration from undraw.co, licensed under the MIT license -->
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="520" viewBox="0 0 760 520" role="img" aria-labelledby="title desc">
+  <title id="title">Democracy dashboard illustration</title>
+  <desc id="desc">Legislators observing analytics and public feedback charts</desc>
+  <rect width="760" height="520" fill="#f4f7fb"/>
+  <g transform="translate(60 40)">
+    <rect x="84" y="36" width="472" height="280" rx="24" fill="#fff" stroke="#1e4d2b" stroke-width="4"/>
+    <path d="M120 88h120v20H120zM120 132h96v18h-96zM120 174h140v18H120z" fill="#1e4d2b" opacity=".65"/>
+    <rect x="308" y="92" width="216" height="148" rx="16" fill="#e8f1ed"/>
+    <path d="M340 188c32-44 76 44 108 0" fill="none" stroke="#1e4d2b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="356" cy="188" r="10" fill="#1e4d2b"/>
+    <circle cx="404" cy="136" r="10" fill="#1e4d2b" opacity=".7"/>
+    <circle cx="452" cy="188" r="10" fill="#1e4d2b"/>
+    <rect x="84" y="348" width="220" height="132" rx="24" fill="#fff" stroke="#1e4d2b" stroke-width="4"/>
+    <rect x="360" y="348" width="196" height="132" rx="24" fill="#fff" stroke="#1e4d2b" stroke-width="4"/>
+    <path d="M108 372h88a20 20 0 0 1 20 20v44a20 20 0 0 1-20 20h-12l-14 28-14-28h-48a20 20 0 0 1-20-20v-44a20 20 0 0 1 20-20Z" fill="#1e4d2b" opacity=".85"/>
+    <path d="M396 372h92a24 24 0 0 1 24 24v48a24 24 0 0 1-24 24h-20l-18 36-18-36h-36a24 24 0 0 1-24-24v-48a24 24 0 0 1 24-24Z" fill="#0f6f3c"/>
+    <circle cx="432" cy="324" r="36" fill="#0f6f3c"/>
+    <path d="M168 300c0 66.274-53.726 120-120 120S-72 366.274-72 300-18.274 180 48 180s120 53.726 120 120Z" fill="#ddeadf" opacity=".7"/>
+    <path d="M660 276c0 58.274-47.726 106-106 106s-106-47.726-106-106 47.726-106 106-106 106 47.726 106 106Z" fill="#ddeadf" opacity=".6"/>
+    <path d="M220 60 252 12l32 48" fill="none" stroke="#1e4d2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M504 60 536 12l32 48" fill="none" stroke="#1e4d2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M520 232c14 0 26 12 26 26s-12 26-26 26" fill="none" stroke="#1e4d2b" stroke-width="4" stroke-linecap="round"/>
+    <path d="M520 242v32" stroke="#1e4d2b" stroke-width="4" stroke-linecap="round"/>
+    <path d="M240 220c14 0 26 12 26 26s-12 26-26 26" fill="none" stroke="#1e4d2b" stroke-width="4" stroke-linecap="round"/>
+    <path d="M240 230v32" stroke="#1e4d2b" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

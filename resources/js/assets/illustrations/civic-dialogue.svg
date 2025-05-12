@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Illustration from undraw.co, licensed under the MIT license -->
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="title desc">
+  <title id="title">Civic dialogue illustration</title>
+  <desc id="desc">Two people discussing legislation with charts and speech bubbles</desc>
+  <rect width="720" height="540" fill="#f2f8f4"/>
+  <g transform="translate(40 60)">
+    <path d="M210 360c0 66.274-53.726 120-120 120S-30 426.274-30 360 23.726 240 90 240s120 53.726 120 120Z" fill="#d7efe0"/>
+    <path d="M640 320c0 53.019-42.981 96-96 96s-96-42.981-96-96 42.981-96 96-96 96 42.981 96 96Z" fill="#d7efe0" opacity=".6"/>
+    <rect x="188" y="42" width="344" height="224" rx="24" fill="#fff" stroke="#0f6f3c" stroke-width="4"/>
+    <path d="M212 86h112c6.627 0 12 5.373 12 12v96c0 6.627-5.373 12-12 12H212c-6.627 0-12-5.373-12-12V98c0-6.627 5.373-12 12-12Z" fill="#e9f6ef"/>
+    <path d="M368 122h128v12H368zM368 154h96v12h-96zM368 186h148v12H368z" fill="#0f6f3c" opacity=".7"/>
+    <circle cx="248" cy="132" r="18" fill="#0f6f3c" opacity=".9"/>
+    <path d="M236 170h56v12h-56zM236 202h72v12h-72z" fill="#0f6f3c" opacity=".7"/>
+    <path d="m474 44 18-26 18 26" fill="none" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M124 314a74 74 0 0 1 113.669-63.534 74 74 0 1 1-113.669 63.534Z" fill="#fff" stroke="#0f6f3c" stroke-width="4"/>
+    <path d="M158 274h32a20 20 0 0 1 20 20v30a20 20 0 0 1-20 20h-11l-13 26-13-26h-8a20 20 0 0 1-20-20v-30a20 20 0 0 1 20-20Z" fill="#0f6f3c" opacity=".8"/>
+    <path d="M470 310h54a26 26 0 0 1 26 26v40a26 26 0 0 1-26 26h-14l-18 36-18-36h-4a26 26 0 0 1-26-26v-40a26 26 0 0 1 26-26Z" fill="#155d33"/>
+    <circle cx="476" cy="252" r="34" fill="#0f6f3c"/>
+    <path d="M492 248c0 8.837-9.85 16-22 16s-22-7.163-22-16 9.85-16 22-16 22 7.163 22 16Z" fill="#fff" opacity=".7"/>
+    <path d="M116 418h196" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M356 418h220" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+    <path d="M292 170c14 0 26 10 26 24s-12 24-26 24" fill="none" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M292 178v32" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M544 380c14 0 26 10 26 24s-12 24-26 24" fill="none" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M544 388v32" stroke="#0f6f3c" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>
