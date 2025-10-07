@@ -1,8 +1,7 @@
 import type { FlashMessageContent, FlashMessages } from '@/types';
-import type { Page } from '@inertiajs/core';
+import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-vue-next';
 import { h } from 'vue';
 import { toast, type ToastOptions } from 'vue3-toastify';
-import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-vue-next';
 
 type ToastVariant = 'success' | 'error' | 'info' | 'warning';
 
@@ -18,7 +17,6 @@ const baseOptions: ToastOptions = {
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
-    draggable: true,
     icon: false,
     position: 'top-right',
     toastClassName: 'portal-toast',
@@ -72,12 +70,12 @@ const emitToast = (variant: ToastVariant, title: string, description?: string | 
             ...baseOptions,
             progressClassName: progressClassByVariant[variant],
             type: variant,
-        }
+        },
     );
 };
 
 const notifyFromFlashBag = (bag?: FlashMessageContent | null) => {
-    if (! bag?.message) {
+    if (!bag?.message) {
         return;
     }
 
@@ -89,7 +87,7 @@ const notifyFromFlashBag = (bag?: FlashMessageContent | null) => {
 };
 
 const notifyFromFlash = (flash?: FlashMessages) => {
-    if (! flash) {
+    if (!flash) {
         return;
     }
 
@@ -105,7 +103,7 @@ const notifyFromFlash = (flash?: FlashMessages) => {
         emitToast('success', flash.status);
     }
 
-    if (flash.message && ! flash.success && ! flash.error) {
+    if (flash.message && !flash.success && !flash.error) {
         emitToast('info', flash.message);
     }
 
@@ -113,19 +111,19 @@ const notifyFromFlash = (flash?: FlashMessages) => {
 };
 
 const notifyFromErrors = (errors?: Record<string, unknown>) => {
-    if (! errors) {
+    if (!errors) {
         return;
     }
 
     const [firstKey] = Object.keys(errors);
 
-    if (! firstKey) {
+    if (!firstKey) {
         return;
     }
 
     const value = errors[firstKey];
 
-    if (! value) {
+    if (!value) {
         return;
     }
 
@@ -136,18 +134,13 @@ const notifyFromErrors = (errors?: Record<string, unknown>) => {
     }
 };
 
-export const flashToastsFromPage = (page: Page<Record<string, unknown>> | undefined): void => {
-    if (! page) {
+export const flashToastsFromPage = (page: any): void => {
+    if (!page) {
         return;
     }
 
-    const props = page.props as Page<Record<string, unknown>>['props'] & {
-        flash?: FlashMessages;
-        errors?: Record<string, unknown>;
-    };
-
-    notifyFromFlash(props.flash);
-    notifyFromErrors(props.errors);
+    notifyFromFlash(page.props.flash);
+    notifyFromErrors(page.props.errors);
 };
 
 export const showNetworkErrorToast = (): void => {

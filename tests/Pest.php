@@ -12,7 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,7 +41,54 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+// Authentication helpers
+function actingAsClerk(): Illuminate\Testing\TestResponse
 {
-    // ..
+    return test()->actingAs(App\Models\User::factory()->clerk()->create());
+}
+
+function actingAsLegislator(?string $house = 'senate'): Illuminate\Testing\TestResponse
+{
+    return test()->actingAs(App\Models\User::factory()->legislator($house)->create());
+}
+
+function actingAsCitizen(): Illuminate\Testing\TestResponse
+{
+    return test()->actingAs(App\Models\User::factory()->citizen()->create());
+}
+
+function actingAsAdmin(): Illuminate\Testing\TestResponse
+{
+    return test()->actingAs(App\Models\User::factory()->admin()->create());
+}
+
+// Data creation helpers
+function createOpenBill(): App\Models\Bill
+{
+    return App\Models\Bill::factory()->openForParticipation()->create();
+}
+
+function createDraftBill(): App\Models\Bill
+{
+    return App\Models\Bill::factory()->draft()->create();
+}
+
+function createClosedBill(): App\Models\Bill
+{
+    return App\Models\Bill::factory()->closed()->create();
+}
+
+function createSubmission(?App\Models\Bill $bill = null, ?App\Models\User $user = null): App\Models\Submission
+{
+    return App\Models\Submission::factory()->create([
+        'bill_id' => $bill?->id ?? App\Models\Bill::factory()->openForParticipation()->create()->id,
+        'user_id' => $user?->id ?? App\Models\User::factory()->citizen()->create()->id,
+    ]);
+}
+
+function createPendingSubmission(?App\Models\Bill $bill = null): App\Models\Submission
+{
+    return App\Models\Submission::factory()->pending()->create([
+        'bill_id' => $bill?->id ?? App\Models\Bill::factory()->openForParticipation()->create()->id,
+    ]);
 }

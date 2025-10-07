@@ -89,6 +89,14 @@ class Bill extends Model
     }
 
     /**
+     * Get citizen engagements for this bill
+     */
+    public function citizenEngagements(): HasMany
+    {
+        return $this->hasMany(CitizenEngagement::class);
+    }
+
+    /**
      * Get all clauses for this bill
      */
     public function clauses(): HasMany

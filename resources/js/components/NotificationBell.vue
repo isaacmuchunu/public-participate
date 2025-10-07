@@ -30,7 +30,7 @@ interface SharedNotifications {
 const page = usePage<{ notifications: SharedNotifications }>();
 
 const notifications = computed<SharedNotifications>(() => {
-    if (! page.props.notifications) {
+    if (!page.props.notifications) {
         return { unread_count: 0, latest: [] };
     }
 
@@ -40,7 +40,7 @@ const notifications = computed<SharedNotifications>(() => {
 const unreadCount = computed(() => notifications.value.unread_count);
 const hasUnread = computed(() => unreadCount.value > 0);
 const unreadBadge = computed(() => {
-    if (! hasUnread.value) {
+    if (!hasUnread.value) {
         return null;
     }
 
@@ -53,32 +53,59 @@ const unreadBadge = computed(() => {
 
 const latestNotifications = computed(() => notifications.value.latest ?? []);
 
+let pollInterval: ReturnType<typeof setInterval> | null = null;
+
+onMounted(() => {
+    // Poll for notifications every 30 seconds
+    pollInterval = setInterval(() => {
+        router.reload({
+            only: ['notifications'],
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }, 30000);
+});
+
+onUnmounted(() => {
+    if (pollInterval) {
+        clearInterval(pollInterval);
+    }
+});
+
 const markNotificationAsRead = (notification: PortalNotification) => {
     if (notification.read_at) {
         return;
     }
 
-    router.post(notificationRoutes.read({ notification: notification.id }).url, {}, {
-        preserveScroll: true,
-        preserveState: true,
-    });
+    router.post(
+        notificationRoutes.read({ notification: notification.id }).url,
+        {},
+        {
+            preserveScroll: true,
+            preserveState: true,
+        },
+    );
 };
 
 const markAllAsRead = () => {
-    if (! hasUnread.value) {
+    if (!hasUnread.value) {
         return;
     }
 
-    router.post(notificationRoutes.readAll().url, {}, {
-        preserveScroll: true,
-        preserveState: true,
-    });
+    router.post(
+        notificationRoutes.readAll().url,
+        {},
+        {
+            preserveScroll: true,
+            preserveState: true,
+        },
+    );
 };
 
 const openNotification = (notification: PortalNotification) => {
     const link = linkForNotification(notification);
 
-    if (! link) {
+    if (!link) {
         markNotificationAsRead(notification);
 
         return;
@@ -99,7 +126,7 @@ const openNotification = (notification: PortalNotification) => {
                 <BellRing class="h-5 w-5" />
                 <span
                     v-if="unreadBadge"
-                    class="absolute -right-1 -top-1 inline-flex min-h-[1.25rem] min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground"
+                    class="absolute -top-1 -right-1 inline-flex min-h-[1.25rem] min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground"
                 >
                     {{ unreadBadge }}
                 </span>
@@ -126,7 +153,7 @@ const openNotification = (notification: PortalNotification) => {
                             <Icon :name="iconForNotification(notification.type)" class="h-5 w-5" />
                         </span>
                         <div class="flex flex-1 flex-col gap-1">
-                            <p class="text-sm font-semibold leading-tight text-foreground">
+                            <p class="text-sm leading-tight font-semibold text-foreground">
                                 {{ titleForNotification(notification) }}
                             </p>
                             <p class="text-xs leading-snug text-muted-foreground">
@@ -175,13 +202,8 @@ const openNotification = (notification: PortalNotification) => {
             </div>
             <DropdownMenuSeparator />
             <div class="flex items-center justify-between px-3 py-2">
-                <Button variant="ghost" size="sm" class="h-8 px-3" :disabled="!hasUnread" @click="markAllAsRead">
-                    Mark all as read
-                </Button>
-                <Link
-                    :href="notificationRoutes.index().url"
-                    class="text-xs font-medium text-primary underline-offset-4 hover:underline"
-                >
+                <Button variant="ghost" size="sm" class="h-8 px-3" :disabled="!hasUnread" @click="markAllAsRead"> Mark all as read </Button>
+                <Link :href="notificationRoutes.index().url" class="text-xs font-medium text-primary underline-offset-4 hover:underline">
                     View inbox
                 </Link>
             </div>

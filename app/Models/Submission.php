@@ -28,6 +28,10 @@ class Submission extends Model
         'metadata',
         'reviewed_at',
         'reviewed_by',
+        'submitted_at',
+        'flagged_by',
+        'flagged_at',
+        'flag_reason',
     ];
 
     protected function casts(): array
@@ -35,6 +39,8 @@ class Submission extends Model
         return [
             'metadata' => 'array',
             'reviewed_at' => 'datetime',
+            'submitted_at' => 'datetime',
+            'flagged_at' => 'datetime',
         ];
     }
 

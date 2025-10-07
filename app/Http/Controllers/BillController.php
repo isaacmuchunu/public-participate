@@ -6,6 +6,7 @@ use App\Http\Requests\Bill\StoreBillRequest;
 use App\Http\Requests\Bill\UpdateBillRequest;
 use App\Models\Bill;
 use App\Models\BillSummary;
+use App\Services\BillPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -54,7 +55,40 @@ class BillController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Generate PDF for the bill
+     */
+    public function generatePdf(Bill $bill)
+    {
+        $pdfService = new BillPdfService();
+        $pdfPath = $pdfService->generateBillPdf($bill);
+
+        return redirect($pdfService->getPdfUrl($pdfPath));
+    }
+
+    /**
+     * Download PDF file
+     */
+    public function downloadPdf(Request $request, string $encryptedPath)
+    {
+        try {
+            $path = decrypt($encryptedPath);
+
+            $pdfService = new BillPdfService();
+            if (!$pdfService->pdfExists($path)) {
+                abort(404, 'PDF not found or expired');
+            }
+
+            return response()->download(
+                Storage::disk('private')->path($path),
+                basename($path)
+            );
+        } catch (\Exception $e) {
+            abort(404, 'Invalid PDF link');
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
      */
     public function create()
     {
@@ -90,18 +124,103 @@ class BillController extends Controller
      */
     public function show(Bill $bill)
     {
-        $bill->load(['creator', 'summary', 'submissions' => function ($query) {
-            $query->with('user')->latest()->take(10);
-        }]);
+        $bill->load(['creator', 'summary']);
 
         // Increment view count
         $bill->increment('views_count');
 
         return Inertia::render('Bills/Show', [
             'bill' => $bill,
+            'clauses' => Inertia::defer(fn() => $bill->clauses()
+                ->withCount('submissions')
+                ->with(['children'])
+                ->orderBy('order')
+                ->get()
+                ->map(fn($clause) => [
+                    ...$clause->toArray(),
+                    'user_has_commented' => Auth::check() && $clause->submissions()
+                        ->where('user_id', Auth::id())
+                        ->exists(),
+                ])
+            ),
+            'submissions' => Inertia::defer(fn() => $bill->submissions()
+                ->with('user')
+                ->latest()
+                ->paginate(20)
+            ),
+            'analytics' => Inertia::defer(fn() => $this->getAnalytics($bill)),
+            'sentiment' => Inertia::defer(fn() => $this->getSentimentAnalysis($bill)),
             'canEdit' => Auth::user()?->can('update', $bill),
             'canDelete' => Auth::user()?->can('delete', $bill),
         ]);
+    }
+
+    private function getAnalytics(Bill $bill)
+    {
+        return [
+            'total_submissions' => $bill->submissions()->count(),
+            'unique_participants' => $bill->submissions()->distinct('user_id')->count('user_id'),
+            'submission_types' => $bill->submissions()
+                ->groupBy('submission_type')
+                ->selectRaw('submission_type, count(*) as count')
+                ->pluck('count', 'submission_type'),
+            'participation_rate' => $bill->submissions()->count() / max($bill->views_count, 1) * 100,
+        ];
+    }
+
+    private function getSentimentAnalysis(Bill $bill)
+    {
+        $submissions = $bill->submissions()->whereNotNull('content')->get();
+
+        if ($submissions->isEmpty()) {
+            return null;
+        }
+
+        // This is a simplified sentiment analysis
+        // In a real implementation, you would use an AI service like OpenAI or Hugging Face
+        $positive = 0;
+        $negative = 0;
+        $neutral = 0;
+
+        foreach ($submissions as $submission) {
+            $content = strtolower($submission->content);
+
+            // Simple keyword-based sentiment analysis
+            $positive_keywords = ['good', 'excellent', 'support', 'agree', 'positive', 'beneficial', 'helpful'];
+            $negative_keywords = ['bad', 'terrible', 'oppose', 'disagree', 'negative', 'harmful', 'problem'];
+
+            $positive_count = count(array_filter($positive_keywords, fn($keyword) => str_contains($content, $keyword)));
+            $negative_count = count(array_filter($negative_keywords, fn($keyword) => str_contains($content, $keyword)));
+
+            if ($positive_count > $negative_count) {
+                $positive++;
+            } elseif ($negative_count > $positive_count) {
+                $negative++;
+            } else {
+                $neutral++;
+            }
+        }
+
+        $total = $positive + $negative + $neutral;
+        if ($total === 0) {
+            return null;
+        }
+
+        // Calculate average score (-1 to 1)
+        $average_score = ($positive - $negative) / $total;
+
+        return [
+            'positive' => $positive / $total,
+            'negative' => $negative / $total,
+            'neutral' => $neutral / $total,
+            'total' => $total,
+            'average_score' => $average_score,
+            'trends' => [
+                'positive_trend' => 0.05, // Placeholder - would calculate from historical data
+                'negative_trend' => -0.02,
+                'neutral_trend' => 0.01,
+            ],
+        ];
     }
 
     /**

@@ -1,13 +1,17 @@
 <?php
 
+use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\BillController;
 use App\Http\Controllers\Api\ClauseController;
 use App\Http\Controllers\Api\Clerk\CitizenController as ApiClerkCitizenController;
 use App\Http\Controllers\Api\Clerk\LegislatorController as ApiClerkLegislatorController;
+use App\Http\Controllers\Api\EngagementController;
 use App\Http\Controllers\Api\GeoDivisionController;
 use App\Http\Controllers\Api\Legislator\BillController as ApiLegislatorBillController;
 use App\Http\Controllers\Api\Legislator\HighlightController as ApiLegislatorHighlightController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SubmissionController;
+use App\Http\Controllers\Api\SubmissionDraftController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('geo/counties', [GeoDivisionController::class, 'counties'])->name('api.geo.counties');
@@ -20,6 +24,34 @@ Route::middleware(['auth', 'throttle:api'])
     ->group(function () {
         Route::apiResource('bills', BillController::class);
         Route::apiResource('submissions', SubmissionController::class);
+
+        // Submission Drafts
+        Route::prefix('submissions')->name('submissions.')->group(function () {
+            Route::post('drafts', [SubmissionDraftController::class, 'store'])->name('drafts.store');
+            Route::patch('drafts/{draft}', [SubmissionDraftController::class, 'update'])->name('drafts.update');
+            Route::delete('drafts/{draft}', [SubmissionDraftController::class, 'destroy'])->name('drafts.destroy');
+            Route::post('drafts/{draft}/submit', [SubmissionDraftController::class, 'submit'])->name('drafts.submit');
+        });
+
+        // Citizen Engagements
+        Route::prefix('engagements')->name('engagements.')->group(function () {
+            Route::get('/', [EngagementController::class, 'index'])->name('index');
+            Route::post('/', [EngagementController::class, 'store'])->name('store');
+            Route::patch('{engagement}/read', [EngagementController::class, 'markAsRead'])->name('markAsRead');
+        });
+
+        // Analytics
+        Route::prefix('analytics')->name('analytics.')->group(function () {
+            Route::get('bills/{bill}', [AnalyticsController::class, 'billAnalytics'])->name('bills.show');
+            Route::get('bills/{bill}/clauses/{clause}', [AnalyticsController::class, 'clauseAnalytics'])->name('clauses.show');
+        });
+
+        // Notifications
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::patch('{notification}/read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
+            Route::patch('mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
+        });
 
         // Bill clauses
         Route::prefix('bills/{bill}/clauses')

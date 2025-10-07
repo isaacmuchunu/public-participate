@@ -56,4 +56,48 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Create a citizen user
+     */
+    public function citizen(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'citizen',
+            'legislative_house' => null,
+        ]);
+    }
+
+    /**
+     * Create a legislator user
+     */
+    public function legislator(?string $house = 'senate'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'legislator',
+            'legislative_house' => $house,
+        ]);
+    }
+
+    /**
+     * Create a clerk user
+     */
+    public function clerk(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'clerk',
+            'legislative_house' => null,
+        ]);
+    }
+
+    /**
+     * Create an admin user
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+            'legislative_house' => null,
+        ]);
+    }
 }

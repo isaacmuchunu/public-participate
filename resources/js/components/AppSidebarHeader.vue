@@ -32,7 +32,7 @@ interface PrimaryAction {
 const primaryAction = computed<PrimaryAction | null>(() => {
     const user = currentUser.value;
 
-    if (! user) {
+    if (!user) {
         return null;
     }
 
@@ -82,6 +82,7 @@ const primaryAction = computed<PrimaryAction | null>(() => {
                 </Link>
             </Button>
             <NotificationBell />
+            <LanguageToggle />
         </div>
     </header>
 </template>

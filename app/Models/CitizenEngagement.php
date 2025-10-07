@@ -19,12 +19,16 @@ class CitizenEngagement extends Model
         'message',
         'channel',
         'sent_at',
+        'read_at',
+        'response_at',
     ];
 
     protected function casts(): array
     {
         return [
             'sent_at' => 'datetime',
+            'read_at' => 'datetime',
+            'response_at' => 'datetime',
         ];
     }
 

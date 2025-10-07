@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import * as billRoutes from '@/routes/bills';
 import * as submissionRoutes from '@/routes/submissions';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import Button from '@/components/ui/button/Button.vue';
 import { computed } from 'vue';
 
 interface SubmissionUser {
@@ -52,6 +52,10 @@ interface BillDetail {
 
 interface Props {
     bill: BillDetail;
+    clauses: any; // Deferred from backend
+    submissions: any; // Deferred from backend
+    analytics: any; // Deferred from backend
+    sentiment?: any; // Sentiment analysis data
     canEdit: boolean;
     canDelete: boolean;
 }
@@ -121,10 +125,10 @@ const pdfUrl = computed(() => {
                         <h1 class="text-3xl font-semibold md:text-4xl">{{ props.bill.title }}</h1>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
-                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase">
                             {{ statusLabel(props.bill.status) }}
                         </span>
-                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase">
                             {{ statusLabel(props.bill.house) }}
                         </span>
                     </div>
@@ -137,7 +141,7 @@ const pdfUrl = computed(() => {
                             <span
                                 v-for="tag in props.bill.tags ?? []"
                                 :key="tag"
-                                class="rounded-full bg-white/15 px-3 py-1 text-xs uppercase tracking-wide text-white/90"
+                                class="rounded-full bg-white/15 px-3 py-1 text-xs tracking-wide text-white/90 uppercase"
                             >
                                 {{ tag }}
                             </span>
@@ -223,10 +227,7 @@ const pdfUrl = computed(() => {
                 </div>
             </div>
 
-            <section
-                v-if="props.bill.summary"
-                class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur"
-            >
+            <section v-if="props.bill.summary" class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
                 <header class="mb-4 flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-emerald-900">Simplified summary</h2>
                     <span class="text-xs text-emerald-800/70">Generated {{ props.bill.summary.generated_at ?? 'recently' }}</span>
@@ -247,7 +248,10 @@ const pdfUrl = computed(() => {
             <section class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
                 <header class="flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-emerald-900">Recent submissions</h2>
-                    <Link :href="submissionRoutes.index().url" class="text-sm font-semibold text-emerald-700 underline-offset-4 hover:text-emerald-900 hover:underline">
+                    <Link
+                        :href="submissionRoutes.index().url"
+                        class="text-sm font-semibold text-emerald-700 underline-offset-4 hover:text-emerald-900 hover:underline"
+                    >
                         View all submissions
                     </Link>
                 </header>
@@ -260,7 +264,7 @@ const pdfUrl = computed(() => {
                     >
                         <header class="flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center gap-3">
-                                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-700 uppercase">
                                     {{ statusLabel(submission.submission_type) }}
                                 </span>
                                 <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="submissionStatusBadge(submission.status)">
@@ -278,6 +282,29 @@ const pdfUrl = computed(() => {
                 </div>
 
                 <p v-else class="mt-4 text-sm text-emerald-800/70">No submissions yet. Be the first to participate.</p>
+            </section>
+
+            <!-- Sentiment Analysis Section -->
+            <section class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
+                <SentimentVisualization :data="sentiment" :loading="false" :bill-title="bill.title" />
+            </section>
+
+            <!-- Clause Reader Section -->
+            <section class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
+                <header class="mb-4">
+                    <h2 class="text-xl font-semibold text-emerald-900">Read and Comment on Clauses</h2>
+                    <p class="text-sm text-emerald-800/80">Review each clause and share your thoughts</p>
+                </header>
+
+                <Suspense>
+                    <ClauseReader :bill="bill" :clauses="clauses" :can-comment="true" />
+                    <template #fallback>
+                        <div class="flex items-center justify-center p-8">
+                            <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-600"></div>
+                            <span class="ml-2 text-sm text-muted-foreground">Loading clauses...</span>
+                        </div>
+                    </template>
+                </Suspense>
             </section>
         </div>
     </PublicLayout>

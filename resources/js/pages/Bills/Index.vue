@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import { Input } from '@/components/ui/input';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import * as billRoutes from '@/routes/bills';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, reactive } from 'vue';
-import { Input } from '@/components/ui/input';
-import Button from '@/components/ui/button/Button.vue';
 
 interface BillSummary {
     simplified_summary_en: string | null;
@@ -57,6 +57,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { t } = useI18n();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,6 +74,26 @@ const filterForm = reactive({
 });
 
 const hasResults = computed(() => props.bills.data.length > 0);
+
+const loadMoreRef = ref<HTMLElement | null>(null);
+
+useInfiniteScroll(
+    loadMoreRef,
+    () => {
+        const nextLink = props.bills.links.find((link) => link.label.includes('Next'));
+        if (nextLink && nextLink.url) {
+            router.visit(nextLink.url, {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['bills'],
+                onSuccess: () => {
+                    // Bills will be merged automatically with Inertia.js merge props
+                },
+            });
+        }
+    },
+    { distance: 200 },
+);
 
 const submitFilters = () => {
     const query: Record<string, string> = {};
@@ -131,8 +152,7 @@ const statusBadgeClasses = (status: string) => {
 
 const formatLabel = (value: string) => value.split('_').join(' ');
 
-const paginationLabel = (label: string) =>
-    label.replaceAll('&laquo;', '«').replaceAll('&raquo;', '»');
+const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').replaceAll('&raquo;', '»');
 </script>
 
 <template>
@@ -141,7 +161,7 @@ const paginationLabel = (label: string) =>
     <PublicLayout :breadcrumbs="breadcrumbs">
         <div class="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-12 md:px-6">
             <header class="flex flex-col gap-3 text-emerald-900">
-                <h1 class="text-3xl font-semibold leading-tight">Explore active and archived bills</h1>
+                <h1 class="text-3xl leading-tight font-semibold">{{ t('bills.title') }}</h1>
                 <p class="max-w-2xl text-base text-emerald-800/80">
                     Review current legislation, understand its public impact, and raise your voice before participation windows close.
                 </p>
@@ -165,7 +185,7 @@ const paginationLabel = (label: string) =>
                         <select
                             id="status"
                             v-model="filterForm.status"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All statuses</option>
                             <option value="draft">Draft</option>
@@ -183,7 +203,7 @@ const paginationLabel = (label: string) =>
                         <select
                             id="house"
                             v-model="filterForm.house"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All houses</option>
                             <option value="national_assembly">National Assembly</option>
@@ -197,7 +217,7 @@ const paginationLabel = (label: string) =>
                         <select
                             id="tag"
                             v-model="filterForm.tag"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All tags</option>
                             <option value="governance">Governance</option>
@@ -209,7 +229,10 @@ const paginationLabel = (label: string) =>
                     </div>
 
                     <div class="flex items-end gap-2 md:col-span-4">
-                        <Button type="submit" class="h-11 rounded-full bg-emerald-600 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700">
+                        <Button
+                            type="submit"
+                            class="h-11 rounded-full bg-emerald-600 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                        >
                             Apply filters
                         </Button>
                         <Button
@@ -239,10 +262,7 @@ const paginationLabel = (label: string) =>
                         <header class="flex flex-col gap-1">
                             <div class="flex items-center justify-between gap-4">
                                 <h2 class="text-lg font-semibold text-emerald-900">{{ bill.title }}</h2>
-                                <span
-                                    class="rounded-full px-3 py-1 text-xs font-medium capitalize"
-                                    :class="statusBadgeClasses(bill.status)"
-                                >
+                                <span class="rounded-full px-3 py-1 text-xs font-medium capitalize" :class="statusBadgeClasses(bill.status)">
                                     {{ formatLabel(bill.status) }}
                                 </span>
                             </div>
@@ -254,11 +274,7 @@ const paginationLabel = (label: string) =>
                         </p>
 
                         <div class="mt-auto flex flex-wrap items-center gap-2">
-                            <span
-                                v-for="tag in bill.tags ?? []"
-                                :key="tag"
-                                class="rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700"
-                            >
+                            <span v-for="tag in bill.tags ?? []" :key="tag" class="rounded-full bg-emerald-50 px-3 py-1 text-xs text-emerald-700">
                                 {{ tag }}
                             </span>
                         </div>
@@ -266,24 +282,26 @@ const paginationLabel = (label: string) =>
                         <footer class="flex items-center justify-between gap-3">
                             <div class="flex flex-col text-xs text-emerald-800/70">
                                 <span>Submissions: {{ bill.submissions_count }}</span>
-                                <span v-if="bill.participation_end_date">
-                                    Participation closes {{ bill.participation_end_date }}
-                                </span>
+                                <span v-if="bill.participation_end_date"> Participation closes {{ bill.participation_end_date }} </span>
                             </div>
 
-                            <Link :href="billRoutes.show({ bill: bill.id }).url" class="text-sm font-semibold text-emerald-700 hover:text-emerald-900">
+                            <Link
+                                :href="billRoutes.show({ bill: bill.id }).url"
+                                class="text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+                            >
                                 View details
                             </Link>
                         </footer>
                     </article>
                 </div>
 
-                <div v-else class="flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-white/90 p-10 text-center text-emerald-800/70">
+                <div
+                    v-else
+                    class="flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-white/90 p-10 text-center text-emerald-800/70"
+                >
                     <div>
                         <p class="font-medium">No bills found</p>
-                        <p class="mt-2 text-sm">
-                            Adjust your filters or check back later for newly published bills.
-                        </p>
+                        <p class="mt-2 text-sm">Adjust your filters or check back later for newly published bills.</p>
                     </div>
                 </div>
             </section>
@@ -295,15 +313,20 @@ const paginationLabel = (label: string) =>
                     :href="link.url ?? '#'"
                     :class="[
                         'rounded-full px-4 py-2 text-sm transition',
-                        link.active
-                            ? 'bg-emerald-600 text-white shadow-sm'
-                            : 'text-emerald-700 hover:bg-emerald-50',
+                        link.active ? 'bg-emerald-600 text-white shadow-sm' : 'text-emerald-700 hover:bg-emerald-50',
                         !link.url && 'pointer-events-none opacity-50',
                     ]"
                 >
                     {{ paginationLabel(link.label) }}
                 </Link>
             </nav>
+
+            <!-- Infinite scroll trigger -->
+            <div v-if="hasResults" ref="loadMoreRef" class="flex h-20 items-center justify-center">
+                <div v-if="props.bills.links.find((link) => link.label.includes('Next'))" class="animate-pulse text-sm text-muted-foreground">
+                    Loading more bills...
+                </div>
+            </div>
         </div>
     </PublicLayout>
 </template>

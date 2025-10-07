@@ -1,0 +1,64 @@
+{
+    "bills": {
+        "title": "Miswada",
+        "participate": "Shiriki katika Miswada",
+        "status": {
+            "open": "Wazi kwa ushiriki",
+            "closed": "Imefungwa",
+            "draft": "Rasimu"
+        },
+        "house": {
+            "national_assembly": "Bunge la Kitaifa",
+            "senate": "Seneti"
+        },
+        "view_details": "Angalia Maelezo ya Mswada",
+        "submit_feedback": "Wasilisha Maoni",
+        "no_bills": "Hakuna miswada inayopatikana",
+        "no_bills_description": "Fursa mpya za ushiriki huchapishwa mara kwa mara. Tutakujulisha wakati miswada itachapishwa."
+    },
+    "accessibility": {
+        "skipToContent": "Ruka kwenda maudhui kuu",
+        "billStatus": "Hali ya mswada: {status}",
+        "billHouse": "Nyumba ya mswada: {house}",
+        "participationProgress": "{percentage}% ya kipindi cha ushiriki imepita",
+        "daysRemaining": "siku {days} zimesalia",
+        "submissionCount": "maoni {count}",
+        "submissionCountSingular": "maoni 1",
+        "clauseNavigation": "Nenda kwa kifungu {number}",
+        "commentOnClause": "Toa maoni juu ya kifungu hiki",
+        "saveDraft": "Hifadhi Rasimu",
+        "submitComment": "Wasilisha Maoni",
+        "cancel": "Ghairi",
+        "loading": "Inapakia...",
+        "error": "Kosa",
+        "success": "Mafanikio"
+    },
+    "navigation": {
+        "home": "Nyumbani",
+        "bills": "Miswada",
+        "submissions": "Maoni",
+        "notifications": "Arifa",
+        "settings": "Mipangilio",
+        "dashboard": "Dashibodi",
+        "logout": "Ondoka"
+    },
+    "common": {
+        "save": "Hifadhi",
+        "edit": "Hariri",
+        "delete": "Futa",
+        "create": "Unda",
+        "update": "Sasisha",
+        "cancel": "Ghairi",
+        "confirm": "Thibitisha",
+        "back": "Nyuma",
+        "next": "Ifuatayo",
+        "previous": "Iliyotangulia",
+        "close": "Funga",
+        "open": "Fungua",
+        "search": "Tafuta",
+        "filter": "Chuja",
+        "sort": "Panga",
+        "export": "Hamisha",
+        "import": "Ingiza"
+    }
+}

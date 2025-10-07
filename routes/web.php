@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\MetricsController;
 use App\Http\Controllers\Admin\SystemAlertController;
+use App\Services\BillPdfService;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\CitizenEngagementController;
 use App\Http\Controllers\Clerk\CitizenController as ClerkCitizenController;
@@ -89,6 +91,8 @@ Route::prefix('bills')
         });
 
         Route::get('{bill}', [BillController::class, 'show'])->name('show');
+        Route::get('{bill}/pdf', [BillController::class, 'generatePdf'])->name('pdf.generate');
+        Route::get('pdf/download/{path}', [BillController::class, 'downloadPdf'])->name('pdf.download')->where('path', '.*');
     });
 
 Route::prefix('admin')
@@ -98,6 +102,8 @@ Route::prefix('admin')
         Route::get('/', function () {
             return to_route('dashboard');
         })->name('dashboard');
+
+        Route::get('metrics', [MetricsController::class, 'index'])->name('metrics');
 
         Route::post('system-alerts', [SystemAlertController::class, 'store'])
             ->name('system-alerts.store');

@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Submission;
 
+use App\Http\Requests\Concerns\SanitizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSubmissionDraftRequest extends FormRequest
 {
+    use SanitizesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -31,7 +34,7 @@ class UpdateSubmissionDraftRequest extends FormRequest
             'bill_id' => ['sometimes', 'required', 'integer', 'exists:bills,id'],
             'submission_type' => ['nullable', 'in:support,oppose,amend,neutral'],
             'language' => ['nullable', 'in:en,sw,other'],
-            'content' => ['nullable', 'string'],
+            'content' => ['nullable', 'string', 'max:10000'],
             'contact_information' => ['nullable', 'array'],
             'contact_information.name' => ['nullable', 'string', 'max:255'],
             'contact_information.email' => ['nullable', 'email', 'max:255'],
@@ -40,5 +43,25 @@ class UpdateSubmissionDraftRequest extends FormRequest
             'attachments' => ['nullable', 'array'],
             'attachments.*' => ['array'],
         ];
+    }
+
+    /**
+     * Get fields that should be sanitized
+     */
+    protected function getSanitizableFields(): array
+    {
+        return ['content', 'contact_information.name', 'contact_information.county'];
+    }
+
+    /**
+     * Get sanitization configuration for a specific field
+     */
+    protected function getFieldSanitizationConfig(string $field): array
+    {
+        if ($field === 'content') {
+            return $this->htmlFieldConfig(['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li']);
+        }
+
+        return parent::getFieldSanitizationConfig($field);
     }
 }

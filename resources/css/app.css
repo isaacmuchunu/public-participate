@@ -87,6 +87,26 @@
         --font-sans:
             'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     }
+
+    /* Mobile-specific optimizations */
+    .mobile-touch-target {
+        @apply min-h-[44px] min-w-[44px];
+    }
+
+    .mobile-safe-area {
+        @apply pb-safe;
+    }
+
+    /* Improved touch scrolling */
+    .touch-scroll {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+
+    /* Mobile-friendly focus states */
+    .mobile-focus {
+        @apply focus:ring-primary focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
 }
 
 :root {
@@ -96,12 +116,12 @@
     --card-foreground: hsl(120 10% 15%);
     --popover: hsl(120 20% 100%);
     --popover-foreground: hsl(120 10% 15%);
-    --primary: hsl(120 60% 25%); /* Kenya green */
+    --primary: hsl(120 60% 22%); /* Kenya green - improved contrast */
     --primary-foreground: hsl(0 0% 98%);
     --secondary: hsl(120 30% 92%);
     --secondary-foreground: hsl(120 10% 15%);
     --muted: hsl(120 20% 96%);
-    --muted-foreground: hsl(120 10% 45%);
+    --muted-foreground: hsl(120 10% 40%); /* Improved contrast for WCAG AA */
     --accent: hsl(120 40% 90%);
     --accent-foreground: hsl(120 10% 15%);
     --destructive: hsl(0 84.2% 60.2%);
@@ -182,6 +202,13 @@
     }
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+/* Enhanced focus styles for WCAG compliance */
+@layer utilities {
+    .focus-visible-ring {
+        @apply focus-visible:ring-ring focus-visible:ring-offset-background outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     }
 }
 

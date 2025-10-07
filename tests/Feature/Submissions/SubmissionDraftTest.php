@@ -5,11 +5,13 @@ use App\Models\Submission;
 use App\Models\SubmissionDraft;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    Notification::fake();
     $this->withSession(['_token' => 'test-token']);
 });
 

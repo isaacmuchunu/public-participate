@@ -61,4 +61,94 @@ class BillFactory extends Factory
             'created_by' => User::factory(),
         ];
     }
+
+    /**
+     * Bill in draft status
+     */
+    public function draft(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'draft',
+            'participation_start_date' => null,
+            'participation_end_date' => null,
+        ]);
+    }
+
+    /**
+     * Bill that is gazetted
+     */
+    public function gazetted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'gazetted',
+            'gazette_date' => now()->subDays(5),
+            'participation_start_date' => null,
+            'participation_end_date' => null,
+        ]);
+    }
+
+    /**
+     * Bill that is open for participation
+     */
+    public function openForParticipation(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'open_for_participation',
+            'gazette_date' => now()->subDays(10),
+            'participation_start_date' => now()->subDays(5),
+            'participation_end_date' => now()->addDays(25),
+        ]);
+    }
+
+    /**
+     * Bill that is closed
+     */
+    public function closed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'closed',
+            'gazette_date' => now()->subDays(60),
+            'participation_start_date' => now()->subDays(50),
+            'participation_end_date' => now()->subDays(20),
+        ]);
+    }
+
+    /**
+     * Bill in committee review
+     */
+    public function inCommitteeReview(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'committee_review',
+            'gazette_date' => now()->subDays(60),
+            'participation_start_date' => now()->subDays(50),
+            'participation_end_date' => now()->subDays(20),
+        ]);
+    }
+
+    /**
+     * Bill that has passed
+     */
+    public function passed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'passed',
+            'gazette_date' => now()->subDays(90),
+            'participation_start_date' => now()->subDays(80),
+            'participation_end_date' => now()->subDays(50),
+        ]);
+    }
+
+    /**
+     * Bill that was rejected
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'rejected',
+            'gazette_date' => now()->subDays(90),
+            'participation_start_date' => now()->subDays(80),
+            'participation_end_date' => now()->subDays(50),
+        ]);
+    }
 }

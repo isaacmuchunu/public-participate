@@ -133,8 +133,9 @@ const paginationLabel = (label: string) =>
                                     link.active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80',
                                     !link.url && !link.active ? 'pointer-events-none opacity-50' : '',
                                 ]"
-                                v-html="paginationLabel(link.label)"
-                            />
+                            >
+                                {{ paginationLabel(link.label) }}
+                            </Link>
                         </nav>
                     </div>
                 </div>

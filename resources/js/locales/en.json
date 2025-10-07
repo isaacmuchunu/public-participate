@@ -1,0 +1,64 @@
+{
+    "bills": {
+        "title": "Bills",
+        "participate": "Participate in Bills",
+        "status": {
+            "open": "Open for participation",
+            "closed": "Closed",
+            "draft": "Draft"
+        },
+        "house": {
+            "national_assembly": "National Assembly",
+            "senate": "Senate"
+        },
+        "view_details": "View Bill Details",
+        "submit_feedback": "Submit Feedback",
+        "no_bills": "No bills available",
+        "no_bills_description": "New participation opportunities are posted frequently. We'll notify you when bills are published."
+    },
+    "accessibility": {
+        "skipToContent": "Skip to main content",
+        "billStatus": "Bill status: {status}",
+        "billHouse": "Bill house: {house}",
+        "participationProgress": "{percentage}% of participation period elapsed",
+        "daysRemaining": "{days} days remaining",
+        "submissionCount": "{count} submissions",
+        "submissionCountSingular": "1 submission",
+        "clauseNavigation": "Navigate to clause {number}",
+        "commentOnClause": "Comment on this clause",
+        "saveDraft": "Save Draft",
+        "submitComment": "Submit Comment",
+        "cancel": "Cancel",
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success"
+    },
+    "navigation": {
+        "home": "Home",
+        "bills": "Bills",
+        "submissions": "Submissions",
+        "notifications": "Notifications",
+        "settings": "Settings",
+        "dashboard": "Dashboard",
+        "logout": "Logout"
+    },
+    "common": {
+        "save": "Save",
+        "edit": "Edit",
+        "delete": "Delete",
+        "create": "Create",
+        "update": "Update",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "close": "Close",
+        "open": "Open",
+        "search": "Search",
+        "filter": "Filter",
+        "sort": "Sort",
+        "export": "Export",
+        "import": "Import"
+    }
+}

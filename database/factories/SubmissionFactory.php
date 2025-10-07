@@ -21,6 +21,7 @@ class SubmissionFactory extends Factory
         $reviewedAt = $status === 'pending' ? null : $this->faker->dateTimeBetween('-2 weeks', 'now');
 
         return [
+            'bill_id' => \App\Models\Bill::factory(),
             'user_id' => User::factory(),
             'submitter_name' => $this->faker->name(),
             'submitter_phone' => $this->faker->optional()->phoneNumber(),
@@ -39,5 +40,70 @@ class SubmissionFactory extends Factory
             'reviewed_at' => $reviewedAt,
             'reviewed_by' => $reviewedAt ? User::factory() : null,
         ];
+    }
+
+    /**
+     * Submission in pending status
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'pending',
+            'review_notes' => null,
+            'reviewed_at' => null,
+            'reviewed_by' => null,
+        ]);
+    }
+
+    /**
+     * Submission under review
+     */
+    public function underReview(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'under_review',
+            'review_notes' => null,
+            'reviewed_at' => null,
+            'reviewed_by' => null,
+        ]);
+    }
+
+    /**
+     * Submission that is approved
+     */
+    public function approved(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'approved',
+            'review_notes' => $this->faker->sentence(),
+            'reviewed_at' => now(),
+            'reviewed_by' => User::factory(),
+        ]);
+    }
+
+    /**
+     * Submission that is rejected
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'rejected',
+            'review_notes' => $this->faker->sentence(),
+            'reviewed_at' => now(),
+            'reviewed_by' => User::factory(),
+        ]);
+    }
+
+    /**
+     * Submission that was included
+     */
+    public function included(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'included',
+            'review_notes' => $this->faker->sentence(),
+            'reviewed_at' => now(),
+            'reviewed_by' => User::factory(),
+        ]);
     }
 }
