@@ -2,10 +2,13 @@
     "bills": {
         "title": "Miswada",
         "participate": "Shiriki katika Miswada",
+        "all_loaded": "Miswada yote yamepakiwa",
         "status": {
             "open": "Wazi kwa ushiriki",
             "closed": "Imefungwa",
-            "draft": "Rasimu"
+            "draft": "Rasimu",
+            "published": "Imechapishwa",
+            "under_review": "Inakaguliwa"
         },
         "house": {
             "national_assembly": "Bunge la Kitaifa",
@@ -14,7 +17,90 @@
         "view_details": "Angalia Maelezo ya Mswada",
         "submit_feedback": "Wasilisha Maoni",
         "no_bills": "Hakuna miswada inayopatikana",
-        "no_bills_description": "Fursa mpya za ushiriki huchapishwa mara kwa mara. Tutakujulisha wakati miswada itachapishwa."
+        "no_bills_description": "Fursa mpya za ushiriki huchapishwa mara kwa mara. Tutakujulisha wakati miswada itachapishwa.",
+        "clause": "Kifungu",
+        "clause_number": "Kifungu {number}",
+        "read_bill": "Soma Mswada",
+        "download": "Pakua Mswada",
+        "share": "Shiriki Mswada",
+        "bookmark": "Weka Alama",
+        "bookmarked": "Umeweka Alama",
+        "participation_period": "Kipindi cha Ushiriki",
+        "closes_on": "Itafungwa tarehe {date}",
+        "days_remaining": "siku {count} zimesalia | siku {count} imesalia | siku {count} zimesalia"
+    },
+    "submissions": {
+        "title": "Maoni",
+        "create": "Unda Maoni",
+        "edit": "Hariri Maoni",
+        "view": "Tazama Maoni",
+        "your_submissions": "Maoni Yako",
+        "submission_history": "Historia ya Maoni",
+        "draft": "Rasimu",
+        "submitted": "Yamewasilishwa",
+        "under_review": "Yanakaguliwa",
+        "approved": "Yameidhinishwa",
+        "rejected": "Yamekataliwa",
+        "form": {
+            "content": "Maoni Yako",
+            "content_placeholder": "Shiriki mawazo yako kuhusu kifungu hiki...",
+            "content_hint": "Angalau herufi 50",
+            "attachments": "Hati za Ziada",
+            "attachments_hint": "Upeo wa faili 3, kila moja MB 10",
+            "is_anonymous": "Wasilisha bila kujulikana",
+            "is_anonymous_hint": "Utambulisho wako utafichwa kwa wabunge",
+            "submit": "Wasilisha Maoni",
+            "save_draft": "Hifadhi Rasimu",
+            "cancel": "Ghairi",
+            "commenting_on": "Unatoa maoni juu ya"
+        },
+        "validation": {
+            "content_required": "Maoni yanahitajika",
+            "content_min_length": "Maoni lazima yawe angalau herufi 50",
+            "content_max_length": "Maoni yasizidi herufi 5000",
+            "attachment_too_large": "Ukubwa wa faili usizidi MB 10",
+            "attachment_invalid_type": "Aina ya faili si sahihi. Zinaruhusiwa: PDF, DOC, DOCX, TXT",
+            "max_attachments": "Upeo wa faili 3 tu zinaruhusiwa"
+        },
+        "messages": {
+            "draft_saved": "Rasimu imehifadhiwa kwa mafanikio",
+            "draft_save_error": "Imeshindwa kuhifadhi rasimu",
+            "submitted_success": "Maoni yamewasilishwa kwa mafanikio",
+            "submitted_error": "Imeshindwa kuwasilisha. Tafadhali jaribu tena.",
+            "auto_saving": "Inahifadhi kiotomatiki...",
+            "last_saved": "Ilihifadhiwa mara ya mwisho {time}"
+        },
+        "no_submissions": "Hakuna maoni bado",
+        "no_submissions_description": "Maoni yako ya ushiriki yataonekana hapa.",
+        "track_submission": "Fuatilia Hali ya Maoni"
+    },
+    "notifications": {
+        "title": "Arifa",
+        "mark_as_read": "Weka alama ya kusoma",
+        "mark_all_read": "Weka alama zote kama zimesomwa",
+        "no_notifications": "Hakuna arifa",
+        "no_notifications_description": "Umekamilisha yote!",
+        "types": {
+            "bill_published": "Mswada Mpya Umechapishwa",
+            "bill_closing_soon": "Mswada Unafunga Hivi Karibuni",
+            "submission_received": "Maoni Yamepokelewa",
+            "submission_approved": "Maoni Yameidhinishwa",
+            "submission_rejected": "Maoni Hayakuidhinishwa",
+            "comment_reply": "Jibu la Maoni",
+            "system_announcement": "Tangazo la Mfumo"
+        },
+        "messages": {
+            "bill_published": "Mswada mpya \"{title}\" umechapishwa",
+            "bill_closing_soon": "Mswada \"{title}\" utafungwa katika siku {days}",
+            "submission_received": "Maoni yako juu ya \"{title}\" yamepokelewa",
+            "submission_approved": "Maoni yako juu ya \"{title}\" yameidhinishwa",
+            "submission_rejected": "Maoni yako juu ya \"{title}\" hayakuidhinishwa",
+            "comment_reply": "Mtu amejibu maoni yako juu ya \"{title}\""
+        },
+        "preferences": "Mapendekezo ya Arifa",
+        "enable_email": "Arifa za barua pepe",
+        "enable_sms": "Arifa za ujumbe mfupi",
+        "enable_push": "Arifa za kusukuma"
     },
     "accessibility": {
         "skipToContent": "Ruka kwenda maudhui kuu",
@@ -31,7 +117,17 @@
         "cancel": "Ghairi",
         "loading": "Inapakia...",
         "error": "Kosa",
-        "success": "Mafanikio"
+        "success": "Mafanikio",
+        "openMenu": "Fungua menyu",
+        "closeMenu": "Funga menyu",
+        "toggleSidebar": "Geuza upau wa kando",
+        "userMenu": "Menyu ya mtumiaji",
+        "languageSelector": "Badilisha lugha",
+        "currentLanguage": "Lugha ya sasa: {language}",
+        "searchBills": "Tafuta miswada",
+        "filterBills": "Chuja miswada",
+        "sortBills": "Panga miswada",
+        "pageNavigation": "Ukurasa {current} wa {total}"
     },
     "navigation": {
         "home": "Nyumbani",
@@ -40,7 +136,10 @@
         "notifications": "Arifa",
         "settings": "Mipangilio",
         "dashboard": "Dashibodi",
-        "logout": "Ondoka"
+        "logout": "Ondoka",
+        "profile": "Wasifu",
+        "help": "Msaada",
+        "about": "Kuhusu"
     },
     "common": {
         "save": "Hifadhi",
@@ -59,6 +158,62 @@
         "filter": "Chuja",
         "sort": "Panga",
         "export": "Hamisha",
-        "import": "Ingiza"
+        "import": "Ingiza",
+        "download": "Pakua",
+        "upload": "Pakia",
+        "share": "Shiriki",
+        "copy": "Nakili",
+        "copied": "Imenakiliwa!",
+        "loading": "Inapakia...",
+        "error": "Kosa limetokea",
+        "success": "Mafanikio",
+        "warning": "Onyo",
+        "info": "Taarifa",
+        "yes": "Ndiyo",
+        "no": "Hapana",
+        "ok": "Sawa",
+        "all": "Zote",
+        "none": "Hakuna",
+        "select": "Chagua",
+        "selected": "Umechagua",
+        "required": "Inahitajika",
+        "optional": "Si lazima",
+        "tbd": "Ithibitishwe",
+        "reset": "Rudisha",
+        "showing": "Inaonyesha {from} hadi {to} kati ya matokeo {total}",
+        "no_results": "Hakuna matokeo yaliyopatikana",
+        "try_different_search": "Jaribu neno lingine la utafutaji"
+    },
+    "dates": {
+        "today": "Leo",
+        "yesterday": "Jana",
+        "tomorrow": "Kesho",
+        "days_ago": "siku {count} zilizopita | siku {count} iliyopita | siku {count} zilizopita",
+        "hours_ago": "masaa {count} yaliyopita | saa {count} iliyopita | masaa {count} yaliyopita",
+        "minutes_ago": "dakika {count} zilizopita | dakika {count} iliyopita | dakika {count} zilizopita",
+        "just_now": "Sasa hivi",
+        "date_format": "d MMMM, yyyy",
+        "time_format": "h:mm a",
+        "datetime_format": "d MMMM, yyyy 'saa' h:mm a"
+    },
+    "auth": {
+        "login": "Ingia",
+        "register": "Jisajili",
+        "logout": "Ondoka",
+        "email": "Barua pepe",
+        "password": "Nywila",
+        "password_confirmation": "Thibitisha Nywila",
+        "remember_me": "Nikumbuke",
+        "forgot_password": "Umesahau nywila?",
+        "reset_password": "Weka Nywila Upya",
+        "verify_email": "Thibitisha Barua Pepe",
+        "already_registered": "Tayari umejisajili?",
+        "not_registered": "Huna akaunti?"
+    },
+    "language": {
+        "english": "English",
+        "swahili": "Kiswahili",
+        "select_language": "Chagua Lugha",
+        "change_language": "Badilisha Lugha"
     }
 }

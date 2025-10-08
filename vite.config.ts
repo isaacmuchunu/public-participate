@@ -24,4 +24,36 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    // Separate vendor chunks for better caching
+                    'reka-ui': ['reka-ui'],
+                    'icons': ['lucide-vue-next'],
+                    'charts': ['chart.js', 'vue-chartjs'],
+                    'utils': ['clsx', 'tailwind-merge', 'class-variance-authority'],
+                    'editor': ['@tiptap/vue-3', '@tiptap/starter-kit'],
+                    'validation': ['@vuelidate/core', '@vuelidate/validators'],
+                    'vueuse': ['@vueuse/core'],
+                    'i18n': ['vue-i18n'],
+                    'date': ['date-fns'],
+                },
+            },
+        },
+        // Optimize chunk size warnings
+        chunkSizeWarningLimit: 1000,
+    },
+    optimizeDeps: {
+        // Pre-bundle dependencies for faster dev server
+        include: [
+            'vue',
+            '@inertiajs/vue3',
+            'reka-ui',
+            'lucide-vue-next',
+            '@vueuse/core',
+            'vue-i18n',
+            'date-fns',
+        ],
+    },
 });

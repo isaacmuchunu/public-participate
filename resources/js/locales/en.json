@@ -2,10 +2,13 @@
     "bills": {
         "title": "Bills",
         "participate": "Participate in Bills",
+            "all_loaded": "All bills loaded",
         "status": {
             "open": "Open for participation",
             "closed": "Closed",
-            "draft": "Draft"
+            "draft": "Draft",
+            "published": "Published",
+            "under_review": "Under Review"
         },
         "house": {
             "national_assembly": "National Assembly",
@@ -14,7 +17,90 @@
         "view_details": "View Bill Details",
         "submit_feedback": "Submit Feedback",
         "no_bills": "No bills available",
-        "no_bills_description": "New participation opportunities are posted frequently. We'll notify you when bills are published."
+        "no_bills_description": "New participation opportunities are posted frequently. We'll notify you when bills are published.",
+        "clause": "Clause",
+        "clause_number": "Clause {number}",
+        "read_bill": "Read Bill",
+        "download": "Download Bill",
+        "share": "Share Bill",
+        "bookmark": "Bookmark",
+        "bookmarked": "Bookmarked",
+        "participation_period": "Participation Period",
+        "closes_on": "Closes on {date}",
+        "days_remaining": "{count} days remaining | {count} day remaining | {count} days remaining"
+    },
+    "submissions": {
+        "title": "Submissions",
+        "create": "Create Submission",
+        "edit": "Edit Submission",
+        "view": "View Submission",
+        "your_submissions": "Your Submissions",
+        "submission_history": "Submission History",
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "under_review": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "form": {
+            "content": "Your Comments",
+            "content_placeholder": "Share your thoughts on this clause...",
+            "content_hint": "Minimum 50 characters",
+            "attachments": "Supporting Documents",
+            "attachments_hint": "Maximum 3 files, 10MB each",
+            "is_anonymous": "Submit anonymously",
+            "is_anonymous_hint": "Your identity will be hidden from legislators",
+            "submit": "Submit Comments",
+            "save_draft": "Save Draft",
+            "cancel": "Cancel",
+            "commenting_on": "Commenting on"
+        },
+        "validation": {
+            "content_required": "Comments are required",
+            "content_min_length": "Comments must be at least 50 characters",
+            "content_max_length": "Comments must not exceed 5000 characters",
+            "attachment_too_large": "File size must not exceed 10MB",
+            "attachment_invalid_type": "Invalid file type. Allowed: PDF, DOC, DOCX, TXT",
+            "max_attachments": "Maximum 3 attachments allowed"
+        },
+        "messages": {
+            "draft_saved": "Draft saved successfully",
+            "draft_save_error": "Failed to save draft",
+            "submitted_success": "Submission sent successfully",
+            "submitted_error": "Failed to submit. Please try again.",
+            "auto_saving": "Auto-saving...",
+            "last_saved": "Last saved {time}"
+        },
+        "no_submissions": "No submissions yet",
+        "no_submissions_description": "Your participation submissions will appear here.",
+        "track_submission": "Track Submission Status"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "mark_as_read": "Mark as read",
+        "mark_all_read": "Mark all as read",
+        "no_notifications": "No notifications",
+        "no_notifications_description": "You're all caught up!",
+        "types": {
+            "bill_published": "New Bill Published",
+            "bill_closing_soon": "Bill Closing Soon",
+            "submission_received": "Submission Received",
+            "submission_approved": "Submission Approved",
+            "submission_rejected": "Submission Rejected",
+            "comment_reply": "Comment Reply",
+            "system_announcement": "System Announcement"
+        },
+        "messages": {
+            "bill_published": "A new bill \"{title}\" has been published",
+            "bill_closing_soon": "Bill \"{title}\" closes in {days} days",
+            "submission_received": "Your submission on \"{title}\" has been received",
+            "submission_approved": "Your submission on \"{title}\" has been approved",
+            "submission_rejected": "Your submission on \"{title}\" was not approved",
+            "comment_reply": "Someone replied to your comment on \"{title}\""
+        },
+        "preferences": "Notification Preferences",
+        "enable_email": "Email notifications",
+        "enable_sms": "SMS notifications",
+        "enable_push": "Push notifications"
     },
     "accessibility": {
         "skipToContent": "Skip to main content",
@@ -31,7 +117,17 @@
         "cancel": "Cancel",
         "loading": "Loading...",
         "error": "Error",
-        "success": "Success"
+        "success": "Success",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "toggleSidebar": "Toggle sidebar",
+        "userMenu": "User menu",
+        "languageSelector": "Change language",
+        "currentLanguage": "Current language: {language}",
+        "searchBills": "Search bills",
+        "filterBills": "Filter bills",
+        "sortBills": "Sort bills",
+        "pageNavigation": "Page {current} of {total}"
     },
     "navigation": {
         "home": "Home",
@@ -40,7 +136,10 @@
         "notifications": "Notifications",
         "settings": "Settings",
         "dashboard": "Dashboard",
-        "logout": "Logout"
+        "logout": "Logout",
+        "profile": "Profile",
+        "help": "Help",
+        "about": "About"
     },
     "common": {
         "save": "Save",
@@ -59,6 +158,62 @@
         "filter": "Filter",
         "sort": "Sort",
         "export": "Export",
-        "import": "Import"
+        "import": "Import",
+        "download": "Download",
+        "upload": "Upload",
+        "share": "Share",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "success": "Success",
+        "warning": "Warning",
+        "info": "Information",
+        "yes": "Yes",
+        "no": "No",
+        "ok": "OK",
+        "all": "All",
+        "none": "None",
+        "select": "Select",
+        "selected": "Selected",
+        "required": "Required",
+        "optional": "Optional",
+            "tbd": "To be confirmed",
+            "reset": "Reset",
+        "showing": "Showing {from} to {to} of {total} results",
+        "no_results": "No results found",
+        "try_different_search": "Try a different search term"
+    },
+    "dates": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "tomorrow": "Tomorrow",
+        "days_ago": "{count} days ago | {count} day ago | {count} days ago",
+        "hours_ago": "{count} hours ago | {count} hour ago | {count} hours ago",
+        "minutes_ago": "{count} minutes ago | {count} minute ago | {count} minutes ago",
+        "just_now": "Just now",
+        "date_format": "MMMM d, yyyy",
+        "time_format": "h:mm a",
+        "datetime_format": "MMMM d, yyyy 'at' h:mm a"
+    },
+    "auth": {
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout",
+        "email": "Email",
+        "password": "Password",
+        "password_confirmation": "Confirm Password",
+        "remember_me": "Remember me",
+        "forgot_password": "Forgot password?",
+        "reset_password": "Reset Password",
+        "verify_email": "Verify Email",
+        "already_registered": "Already registered?",
+        "not_registered": "Don't have an account?"
+    },
+    "language": {
+        "english": "English",
+        "swahili": "Kiswahili",
+        "select_language": "Select Language",
+        "change_language": "Change Language"
     }
 }

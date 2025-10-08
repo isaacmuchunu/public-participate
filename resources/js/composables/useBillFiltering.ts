@@ -1,3 +1,4 @@
+import type { VisitOptions } from '@inertiajs/core';
 import { router } from '@inertiajs/vue3';
 import { computed, reactive } from 'vue';
 
@@ -8,7 +9,32 @@ interface BillFilters {
     search?: string;
 }
 
-export function useBillFiltering(initialFilters: BillFilters = {}) {
+type RouteQueryOptions = {
+    query?: Record<string, string>;
+    mergeQuery?: Record<string, string>;
+};
+
+type RouteFactory = (options?: RouteQueryOptions) => { url: string };
+
+interface UseBillFilteringOptions {
+    /** Optional default route factory to apply filters against */
+    defaultRoute?: RouteFactory;
+    /** Default visit options when applying filters */
+    visitOptions?: Partial<VisitOptions>;
+    /** Automatically apply filters when reset is called */
+    autoApplyOnReset?: boolean;
+}
+
+const DEFAULT_VISIT_OPTIONS: Partial<VisitOptions> = {
+    method: 'get',
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+};
+
+export function useBillFiltering(initialFilters: BillFilters = {}, options: UseBillFilteringOptions = {}) {
+    const { defaultRoute, visitOptions, autoApplyOnReset = true } = options;
+
     const filters = reactive({
         status: initialFilters.status ?? 'all',
         house: initialFilters.house ?? 'all',
@@ -20,7 +46,7 @@ export function useBillFiltering(initialFilters: BillFilters = {}) {
         return filters.status !== 'all' || filters.house !== 'all' || filters.tag !== 'all' || filters.search !== '';
     });
 
-    const applyFilters = (routeName: string = 'bills.index') => {
+    const buildQuery = () => {
         const query: Record<string, string> = {};
 
         if (filters.status && filters.status !== 'all') {
@@ -39,18 +65,44 @@ export function useBillFiltering(initialFilters: BillFilters = {}) {
             query.search = filters.search;
         }
 
-        router.get(`/${routeName}`, query, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
+        return query;
+    };
+
+    const resolveRouteUrl = (factory?: RouteFactory, query?: Record<string, string>) => {
+        if (!factory) {
+            return null;
+        }
+
+        const result = factory({ query });
+        return result?.url ?? null;
+    };
+
+    const applyFilters = (factory?: RouteFactory, overrideVisitOptions?: Partial<VisitOptions>) => {
+        const routeFactory = factory ?? defaultRoute;
+        const query = buildQuery();
+        const url = resolveRouteUrl(routeFactory, query);
+
+        if (!url) {
+            console.warn('useBillFiltering: No route provided to applyFilters.');
+            return;
+        }
+
+        router.visit(url, {
+            ...DEFAULT_VISIT_OPTIONS,
+            ...visitOptions,
+            ...overrideVisitOptions,
         });
     };
 
-    const resetFilters = () => {
+    const resetFilters = (factory?: RouteFactory) => {
         filters.status = 'all';
         filters.house = 'all';
         filters.tag = 'all';
         filters.search = '';
+
+        if (autoApplyOnReset) {
+            applyFilters(factory ?? defaultRoute);
+        }
     };
 
     const setFilter = (key: keyof BillFilters, value: string) => {
@@ -63,5 +115,6 @@ export function useBillFiltering(initialFilters: BillFilters = {}) {
         applyFilters,
         resetFilters,
         setFilter,
+        buildQuery,
     };
 }

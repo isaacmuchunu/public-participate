@@ -5,22 +5,22 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
 } from '@/components/ui/sidebar';
-import { dashboard, appearance } from '@/routes';
+import { appearance, dashboard } from '@/routes';
 import * as bills from '@/routes/bills';
+import clerk from '@/routes/clerk';
+import * as notifications from '@/routes/notifications';
+import * as profile from '@/routes/profile';
+import * as sessions from '@/routes/sessions';
 import * as submissions from '@/routes/submissions';
 import * as submissionsTrack from '@/routes/submissions/track';
-import * as sessions from '@/routes/sessions';
-import * as profile from '@/routes/profile';
-import * as notifications from '@/routes/notifications';
-import clerk from '@/routes/clerk';
 import { type NavItem, type User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
@@ -45,7 +45,7 @@ const page = usePage<{ auth: { user: User | null } }>();
 const currentUser = computed(() => page.props.auth.user);
 
 const primaryNavItems = computed<NavItem[]>(() => {
-    if (! currentUser.value) {
+    if (!currentUser.value) {
         return [];
     }
 
@@ -69,7 +69,7 @@ const primaryNavItems = computed<NavItem[]>(() => {
                 title: 'Submission history',
                 href: submissions.index().url,
                 icon: BarChart3,
-            }
+            },
         );
     } else if (role === 'mp' || role === 'senator') {
         items.push(
@@ -82,7 +82,7 @@ const primaryNavItems = computed<NavItem[]>(() => {
                 title: 'Citizen feedback',
                 href: submissions.index().url,
                 icon: BarChart3,
-            }
+            },
         );
     } else if (role === 'admin') {
         items.push(
@@ -100,7 +100,7 @@ const primaryNavItems = computed<NavItem[]>(() => {
                 title: 'Legislator onboarding',
                 href: clerk.legislators.index().url,
                 icon: ShieldCheck,
-            }
+            },
         );
     } else {
         items.push(
@@ -118,7 +118,7 @@ const primaryNavItems = computed<NavItem[]>(() => {
                 title: 'System controls',
                 href: appearance().url,
                 icon: Settings,
-            }
+            },
         );
     }
 
@@ -126,7 +126,7 @@ const primaryNavItems = computed<NavItem[]>(() => {
 });
 
 const quickActions = computed<NavItem[]>(() => {
-    if (! currentUser.value) {
+    if (!currentUser.value) {
         return [];
     }
 
@@ -237,7 +237,7 @@ const quickActions = computed<NavItem[]>(() => {
 });
 
 const insightLink = computed<NavItem>(() => {
-    if (! currentUser.value) {
+    if (!currentUser.value) {
         return {
             title: 'Participation insights',
             href: submissions.index().url,

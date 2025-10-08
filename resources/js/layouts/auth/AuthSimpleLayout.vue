@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="grid min-h-svh bg-background lg:grid-cols-[1.1fr,0.9fr]">
+    <div class="bg-background grid min-h-svh lg:grid-cols-[1.1fr,0.9fr]">
         <div class="relative hidden overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-500 to-sky-500 text-white lg:flex">
             <div class="pointer-events-none absolute inset-0">
                 <span class="absolute -left-24 top-24 h-64 w-64 rounded-full bg-white/25 blur-3xl" />
@@ -29,9 +29,7 @@ defineProps<{
 
                 <div class="space-y-6">
                     <p class="text-sm font-medium uppercase text-white/70">Welcome to the civic engagement workspace</p>
-                    <h2 class="text-4xl font-semibold leading-tight">
-                        Build trust with transparent consultation and evidence-led decision making.
-                    </h2>
+                    <h2 class="text-4xl font-semibold leading-tight">Build trust with transparent consultation and evidence-led decision making.</h2>
                     <p class="text-base text-white/70">
                         Manage national participation cycles, capture public insights, and align legislative action with citizen priorities in one
                         collaborative platform.
@@ -55,20 +53,20 @@ defineProps<{
             </div>
         </div>
 
-        <div class="relative flex items-center justify-center bg-background px-6 py-16 sm:px-10 lg:px-16">
+        <div class="bg-background relative flex items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
             <div class="w-full max-w-md">
-                <div class="rounded-3xl border border-border/60 bg-card/95 p-10 shadow-xl shadow-emerald-900/5 backdrop-blur">
+                <div class="border-border/60 bg-card/95 rounded-3xl border p-10 shadow-xl shadow-emerald-900/5 backdrop-blur">
                     <div class="space-y-2">
-                        <p class="text-xs font-medium uppercase tracking-[0.3em] text-primary/70">Secure access</p>
-                        <h1 class="text-2xl font-semibold leading-tight text-foreground">{{ title }}</h1>
-                        <p class="text-sm text-muted-foreground">{{ description }}</p>
+                        <p class="text-primary/70 text-xs font-medium uppercase tracking-[0.3em]">Secure access</p>
+                        <h1 class="text-foreground text-2xl font-semibold leading-tight">{{ title }}</h1>
+                        <p class="text-muted-foreground text-sm">{{ description }}</p>
                     </div>
                     <div class="mt-8 space-y-6">
                         <slot />
                     </div>
                 </div>
-                <p class="mt-6 text-center text-xs text-muted-foreground">
-                    Need assistance? <a href="mailto:support@pps.ke" class="font-medium text-primary hover:underline">support@pps.ke</a>
+                <p class="text-muted-foreground mt-6 text-center text-xs">
+                    Need assistance? <a href="mailto:support@pps.ke" class="text-primary font-medium hover:underline">support@pps.ke</a>
                 </p>
             </div>
         </div>

@@ -205,10 +205,160 @@
     }
 }
 
-/* Enhanced focus styles for WCAG compliance */
+/* Enhanced focus styles for WCAG 2.1 AA compliance */
 @layer utilities {
     .focus-visible-ring {
         @apply focus-visible:ring-ring focus-visible:ring-offset-background outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    }
+
+    /* Keyboard-only focus indicator (enhanced visibility) */
+    .focus-keyboard {
+        @apply focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    }
+
+    /* Strong focus for high contrast mode */
+    .focus-strong {
+        @apply focus-visible:outline-ring focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+    }
+}
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only:focus,
+.sr-only:active {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* High Contrast Mode Support */
+.high-contrast {
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(0 0% 0%);
+    --primary: hsl(120 100% 20%);
+    --primary-foreground: hsl(0 0% 100%);
+    --muted-foreground: hsl(0 0% 25%);
+    --border: hsl(0 0% 20%);
+}
+
+.dark.high-contrast {
+    --background: hsl(0 0% 0%);
+    --foreground: hsl(0 0% 100%);
+    --primary: hsl(120 100% 80%);
+    --primary-foreground: hsl(0 0% 0%);
+    --muted-foreground: hsl(0 0% 85%);
+    --border: hsl(0 0% 80%);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Font Size Scaling */
+.font-sm {
+    font-size: 90%;
+}
+
+.font-md {
+    font-size: 100%;
+}
+
+.font-lg {
+    font-size: 112.5%;
+}
+
+.font-xl {
+    font-size: 125%;
+}
+
+/* Link Underlining Option */
+.underline-links a:not(.no-underline) {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.underline-links a:hover:not(.no-underline) {
+    text-decoration-thickness: 2px;
+}
+
+/* Keyboard Navigation Indicators */
+:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+}
+
+/* Enhanced interactive element accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+}
+
+/* Skip link styling */
+a.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    z-index: 9999;
+    padding: 1rem 1.5rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    text-decoration: none;
+    border-radius: 0 0 0.5rem 0;
+    font-weight: 600;
+    transition: top 0.2s ease;
+}
+
+a.skip-link:focus {
+    top: 0;
+}
+
+/* Touch target sizing for mobile (44x44px minimum) */
+@media (pointer: coarse) {
+    button,
+    a,
+    input[type='button'],
+    input[type='submit'],
+    input[type='reset'] {
+        min-height: 44px;
+        min-width: 44px;
     }
 }
 

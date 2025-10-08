@@ -40,10 +40,7 @@ const resendCode = async () => {
 </script>
 
 <template>
-    <AuthBase
-        title="Verify your account"
-        description="Enter the six-digit code we sent to confirm your participation profile before signing in."
-    >
+    <AuthBase title="Verify your account" description="Enter the six-digit code we sent to confirm your participation profile before signing in.">
         <Head title="Verify registration" />
 
         <div class="space-y-6">
@@ -54,11 +51,15 @@ const resendCode = async () => {
                 {{ status }}
             </div>
 
-            <div class="space-y-3 rounded-2xl border border-border/50 bg-muted/30 px-4 py-4 text-sm text-muted-foreground">
+            <div class="border-border/50 bg-muted/30 text-muted-foreground space-y-3 rounded-2xl border px-4 py-4 text-sm">
                 <p>We sent your verification code to:</p>
-                <ul class="space-y-1 text-foreground">
-                    <li v-if="props.contact.email">Email: <span class="font-medium">{{ props.contact.email }}</span></li>
-                    <li v-if="props.contact.phone">Mobile: <span class="font-medium">{{ props.contact.phone }}</span></li>
+                <ul class="text-foreground space-y-1">
+                    <li v-if="props.contact.email">
+                        Email: <span class="font-medium">{{ props.contact.email }}</span>
+                    </li>
+                    <li v-if="props.contact.phone">
+                        Mobile: <span class="font-medium">{{ props.contact.phone }}</span>
+                    </li>
                 </ul>
                 <p>Codes expire after 10 minutes for your security.</p>
             </div>
@@ -87,7 +88,9 @@ const resendCode = async () => {
                 </Button>
             </Form>
 
-            <div class="flex items-center justify-between rounded-2xl border border-dashed border-border/60 bg-background/80 px-4 py-3 text-xs text-muted-foreground">
+            <div
+                class="border-border/60 bg-background/80 text-muted-foreground flex items-center justify-between rounded-2xl border border-dashed px-4 py-3 text-xs"
+            >
                 <span>Didn’t receive the code?</span>
                 <Button variant="ghost" class="gap-2 text-xs font-medium" :disabled="resending" @click="resendCode">
                     <RefreshCw v-if="resending" class="h-4 w-4 animate-spin" />
@@ -95,7 +98,7 @@ const resendCode = async () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 Already verified?
                 <TextLink :href="login()" class="font-medium">Sign in</TextLink>
             </div>

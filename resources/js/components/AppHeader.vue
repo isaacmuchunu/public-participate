@@ -98,10 +98,14 @@ const markAllNotifications = () => {
         return;
     }
 
-    router.post(notificationRoutes.readAll().url, {}, {
-        preserveScroll: true,
-        preserveState: true,
-    });
+    router.post(
+        notificationRoutes.readAll().url,
+        {},
+        {
+            preserveScroll: true,
+            preserveState: true,
+        },
+    );
 };
 
 const isCurrentRoute = computed(() => (url: NonNullable<InertiaLinkProps['href']>) => urlIsActive(url, page.url));
@@ -114,13 +118,13 @@ const activeItemStyles = computed(
 const mainNavItems = computed<NavItem[]>(() =>
     isAuthenticated.value
         ? [
-            {
-                title: 'Dashboard',
-                href: dashboard(),
-                icon: LayoutGrid,
-            },
-        ]
-        : []
+              {
+                  title: 'Dashboard',
+                  href: dashboard(),
+                  icon: LayoutGrid,
+              },
+          ]
+        : [],
 );
 
 const rightNavItems: NavItem[] = [
@@ -139,7 +143,7 @@ const rightNavItems: NavItem[] = [
 
 <template>
     <div>
-        <div class="border-b border-sidebar-border/80">
+        <div class="border-sidebar-border/80 border-b">
             <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
                 <!-- Mobile Menu -->
                 <div class="lg:hidden">
@@ -160,7 +164,7 @@ const rightNavItems: NavItem[] = [
                                         v-for="item in mainNavItems"
                                         :key="item.title"
                                         :href="item.href"
-                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                                        class="hover:bg-accent flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
                                         :class="activeItemStyles(item.href)"
                                     >
                                         <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
@@ -250,40 +254,48 @@ const rightNavItems: NavItem[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-80 p-0">
-                            <div class="flex items-center justify-between border-b border-sidebar-border/60 px-4 py-3">
+                            <div class="border-sidebar-border/60 flex items-center justify-between border-b px-4 py-3">
                                 <div>
-                                    <p class="text-sm font-semibold text-foreground">Notifications</p>
-                                    <p class="text-xs text-muted-foreground">{{ hasUnread ? `${unreadCount} unread updates` : 'All updates read' }}</p>
+                                    <p class="text-foreground text-sm font-semibold">Notifications</p>
+                                    <p class="text-muted-foreground text-xs">
+                                        {{ hasUnread ? `${unreadCount} unread updates` : 'All updates read' }}
+                                    </p>
                                 </div>
                                 <Link
                                     :href="notificationRoutes.index().url"
-                                    class="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                                    class="text-primary text-xs font-medium underline-offset-4 hover:underline"
                                 >
                                     View all
                                 </Link>
                             </div>
                             <div v-if="notificationPreview.length" class="max-h-80 overflow-y-auto">
-                                <DropdownMenuItem v-for="notification in notificationPreview" :key="notification.id" as-child class="whitespace-normal px-0 py-0">
+                                <DropdownMenuItem
+                                    v-for="notification in notificationPreview"
+                                    :key="notification.id"
+                                    as-child
+                                    class="whitespace-normal px-0 py-0"
+                                >
                                     <Link :href="quickLink(notification) ?? notificationRoutes.index().url" class="flex flex-col gap-1 px-4 py-3">
                                         <div class="flex items-center justify-between gap-3">
-                                            <p class="text-sm font-semibold text-foreground">{{ quickTitle(notification) }}</p>
-                                            <span class="text-[11px] text-muted-foreground">{{ quickTimestamp(notification.created_at ?? null) }}</span>
+                                            <p class="text-foreground text-sm font-semibold">{{ quickTitle(notification) }}</p>
+                                            <span class="text-muted-foreground text-[11px]">{{
+                                                quickTimestamp(notification.created_at ?? null)
+                                            }}</span>
                                         </div>
-                                        <p class="text-xs text-muted-foreground">{{ quickBody(notification) }}</p>
+                                        <p class="text-muted-foreground text-xs">{{ quickBody(notification) }}</p>
                                     </Link>
                                 </DropdownMenuItem>
                             </div>
-                            <div v-else class="px-4 py-6 text-center text-sm text-muted-foreground">
-                                You are up to date.
-                            </div>
+                            <div v-else class="text-muted-foreground px-4 py-6 text-center text-sm">You are up to date.</div>
                             <DropdownMenuSeparator />
                             <div class="flex items-center justify-between px-4 py-3">
-                                <Link :href="notificationRoutes.index().url" class="text-xs font-medium text-primary underline-offset-4 hover:underline">
+                                <Link
+                                    :href="notificationRoutes.index().url"
+                                    class="text-primary text-xs font-medium underline-offset-4 hover:underline"
+                                >
                                     Notification centre
                                 </Link>
-                                <Button variant="ghost" size="sm" class="text-xs" @click.prevent="markAllNotifications">
-                                    Mark all read
-                                </Button>
+                                <Button variant="ghost" size="sm" class="text-xs" @click.prevent="markAllNotifications"> Mark all read </Button>
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -293,7 +305,7 @@ const rightNavItems: NavItem[] = [
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                class="focus-within:ring-primary relative size-10 w-auto rounded-full p-1 focus-within:ring-2"
                             >
                                 <Avatar class="size-8 overflow-hidden rounded-full">
                                     <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
@@ -311,7 +323,7 @@ const rightNavItems: NavItem[] = [
             </div>
         </div>
 
-        <div v-if="props.breadcrumbs.length > 1" class="flex w-full border-b border-sidebar-border/70">
+        <div v-if="props.breadcrumbs.length > 1" class="border-sidebar-border/70 flex w-full border-b">
             <div class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </div>

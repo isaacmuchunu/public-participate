@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
-import geo from '@/routes/api/geo';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/routes';
+import geo from '@/routes/api/geo';
+import { AppPageProps } from '@/types';
 import { Form, Head, usePage } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
-import { AppPageProps } from '@/types';
 
 interface GeoOption {
     id: number;
@@ -135,19 +135,21 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div class="bg-background min-h-screen px-4 py-12 sm:px-6 lg:px-8">
         <Head title="Register" />
 
         <div class="mx-auto max-w-7xl">
             <div class="mb-8 text-center">
                 <h1 class="text-4xl font-bold tracking-tight">Create your workspace profile</h1>
-                <p class="mt-2 text-lg text-muted-foreground">
+                <p class="text-muted-foreground mt-2 text-lg">
                     Register to share insights, monitor participation milestones, and collaborate with legislative teams.
                 </p>
             </div>
 
             <div class="mx-auto max-w-6xl space-y-8">
-                <div class="rounded-2xl border border-[hsl(var(--info-border))] bg-[hsl(var(--info-background))] px-6 py-5 text-sm text-[hsl(var(--info-foreground))]">
+                <div
+                    class="rounded-2xl border border-[hsl(var(--info-border))] bg-[hsl(var(--info-background))] px-6 py-5 text-sm text-[hsl(var(--info-foreground))]"
+                >
                     Provide accurate contact and residency details. We will send a one-time passcode to your phone and email to confirm your identity
                     before your account is activated.
                 </div>
@@ -231,7 +233,7 @@ onMounted(async () => {
                                 placeholder="07########"
                                 class="h-12 text-base"
                             />
-                            <p class="text-sm text-muted-foreground">Use your active Kenyan mobile number to receive the verification code.</p>
+                            <p class="text-muted-foreground text-sm">Use your active Kenyan mobile number to receive the verification code.</p>
                             <InputError :message="errors.phone" />
                         </div>
 
@@ -258,7 +260,7 @@ onMounted(async () => {
                             <select
                                 id="county_id"
                                 name="county_id"
-                                class="h-12 w-full rounded-xl border border-border/60 bg-background px-4 py-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                class="border-border/60 bg-background focus:border-primary focus:ring-primary/20 h-12 w-full rounded-xl border px-4 py-3 text-base focus:outline-none focus:ring-2"
                                 v-model="selectedCountyId"
                             >
                                 <option value="" disabled>Select your county</option>
@@ -272,7 +274,7 @@ onMounted(async () => {
                             <select
                                 id="constituency_id"
                                 name="constituency_id"
-                                class="h-12 w-full rounded-xl border border-border/60 bg-background px-4 py-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                                class="border-border/60 bg-background focus:border-primary focus:ring-primary/20 h-12 w-full rounded-xl border px-4 py-3 text-base focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 v-model="selectedConstituencyId"
                                 :disabled="!selectedCountyId || isLoadingConstituencies"
                             >
@@ -297,7 +299,7 @@ onMounted(async () => {
                             <select
                                 id="ward_id"
                                 name="ward_id"
-                                class="h-12 w-full rounded-xl border border-border/60 bg-background px-4 py-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                                class="border-border/60 bg-background focus:border-primary focus:ring-primary/20 h-12 w-full rounded-xl border px-4 py-3 text-base focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 v-model="selectedWardId"
                                 :disabled="!selectedConstituencyId || isLoadingWards"
                             >
@@ -329,7 +331,7 @@ onMounted(async () => {
                                 placeholder="Create a strong password"
                                 class="h-12 text-base"
                             />
-                            <p class="text-sm text-muted-foreground">Use at least 10 characters with a mix of letters, numbers, and symbols.</p>
+                            <p class="text-muted-foreground text-sm">Use at least 10 characters with a mix of letters, numbers, and symbols.</p>
                             <InputError :message="errors.password" />
                         </div>
 
@@ -359,14 +361,14 @@ onMounted(async () => {
                         </Button>
                     </div>
 
-                    <div class="rounded-2xl border border-dashed border-border/60 bg-background/80 px-6 py-4 text-sm text-muted-foreground">
-                        By creating an account you agree to comply with the Public Participation Code of Conduct and consent to secure processing of your
-                        submissions.
+                    <div class="border-border/60 bg-background/80 text-muted-foreground rounded-2xl border border-dashed px-6 py-4 text-sm">
+                        By creating an account you agree to comply with the Public Participation Code of Conduct and consent to secure processing of
+                        your submissions.
                     </div>
 
-                    <div class="text-center text-base text-muted-foreground">
+                    <div class="text-muted-foreground text-center text-base">
                         Already have access?
-                        <TextLink :href="login()" class="font-medium text-primary hover:underline">Sign in</TextLink>
+                        <TextLink :href="login()" class="text-primary font-medium hover:underline">Sign in</TextLink>
                     </div>
                 </Form>
             </div>

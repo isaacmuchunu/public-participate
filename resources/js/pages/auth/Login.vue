@@ -18,13 +18,13 @@ defineProps<{
 </script>
 
 <template>
-    <div class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div class="bg-background min-h-screen px-4 py-12 sm:px-6 lg:px-8">
         <Head title="Sign in" />
 
         <div class="mx-auto max-w-md">
             <div class="mb-8 text-center">
                 <h1 class="text-3xl font-bold tracking-tight">Welcome back</h1>
-                <p class="mt-2 text-base text-muted-foreground">
+                <p class="text-muted-foreground mt-2 text-base">
                     Sign in to orchestrate public participation programmes and track engagement intelligence.
                 </p>
             </div>
@@ -37,7 +37,9 @@ defineProps<{
                     {{ status }}
                 </div>
 
-                <div class="rounded-2xl border border-[hsl(var(--info-border))] bg-[hsl(var(--info-background))] px-4 py-3 text-sm text-[hsl(var(--info-foreground))]">
+                <div
+                    class="rounded-2xl border border-[hsl(var(--info-border))] bg-[hsl(var(--info-background))] px-4 py-3 text-sm text-[hsl(var(--info-foreground))]"
+                >
                     Use your organisation email address to access the participation control centre. Contact the system administrator if you need to
                     restore access.
                 </div>
@@ -81,12 +83,12 @@ defineProps<{
                             <InputError :message="errors.password" />
                         </div>
 
-                        <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/80 px-4 py-3">
+                        <div class="border-border/50 bg-background/80 flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3">
                             <Label for="remember" class="flex items-center gap-3 text-sm font-medium">
                                 <Checkbox id="remember" name="remember" />
                                 <span>Keep me signed in on this device</span>
                             </Label>
-                            <p class="text-xs text-muted-foreground">Only select this on secure, personal devices.</p>
+                            <p class="text-muted-foreground text-xs">Only select this on secure, personal devices.</p>
                         </div>
                     </div>
 
@@ -97,9 +99,9 @@ defineProps<{
                         </Button>
                     </div>
 
-                    <div class="text-center text-sm text-muted-foreground">
+                    <div class="text-muted-foreground text-center text-sm">
                         New to the platform?
-                        <TextLink :href="register()" class="font-medium text-primary hover:underline">Request an account</TextLink>
+                        <TextLink :href="register()" class="text-primary font-medium hover:underline">Request an account</TextLink>
                     </div>
                 </Form>
             </div>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { dashboard, home, login, register } from '@/routes';
+import * as bills from '@/routes/bills';
+import type { BreadcrumbItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Menu } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
-import type { BreadcrumbItem } from '@/types';
-import { dashboard, home, login, register } from '@/routes';
-import * as bills from '@/routes/bills';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -34,7 +34,7 @@ const navigationLinks = computed(() => [
 const currentYear = new Date().getFullYear();
 
 function toggleMobile() {
-    mobileOpen.value = ! mobileOpen.value;
+    mobileOpen.value = !mobileOpen.value;
 }
 
 function closeMobile() {
@@ -51,12 +51,7 @@ function closeMobile() {
                 </Link>
 
                 <nav class="hidden items-center gap-6 text-sm font-medium text-emerald-900 md:flex">
-                    <Link
-                        v-for="item in navigationLinks"
-                        :key="item.label"
-                        :href="item.href"
-                        class="transition hover:text-emerald-600"
-                    >
+                    <Link v-for="item in navigationLinks" :key="item.label" :href="item.href" class="transition hover:text-emerald-600">
                         {{ item.label }}
                     </Link>
                 </nav>
@@ -86,17 +81,34 @@ function closeMobile() {
                     </template>
                 </div>
 
-                <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-emerald-200 text-emerald-700 md:hidden" @click="toggleMobile">
+                <button
+                    type="button"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-emerald-200 text-emerald-700 md:hidden"
+                    @click="toggleMobile"
+                >
                     <Menu class="h-5 w-5" />
                     <span class="sr-only">Toggle navigation</span>
                 </button>
             </div>
 
-            <transition enter-active-class="transition duration-150 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-2">
+            <transition
+                enter-active-class="transition duration-150 ease-out"
+                enter-from-class="opacity-0 -translate-y-2"
+                enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition duration-150 ease-in"
+                leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 -translate-y-2"
+            >
                 <div v-if="mobileOpen" class="border-t border-emerald-100/80 bg-white md:hidden">
                     <div class="space-y-4 px-4 py-4">
                         <nav class="flex flex-col gap-3 text-sm font-medium text-emerald-900">
-                            <Link v-for="item in navigationLinks" :key="item.label" :href="item.href" class="rounded-md px-3 py-2 hover:bg-emerald-50" @click="closeMobile">
+                            <Link
+                                v-for="item in navigationLinks"
+                                :key="item.label"
+                                :href="item.href"
+                                class="rounded-md px-3 py-2 hover:bg-emerald-50"
+                                @click="closeMobile"
+                            >
                                 {{ item.label }}
                             </Link>
                         </nav>
@@ -143,7 +155,9 @@ function closeMobile() {
         </main>
 
         <footer class="border-t border-emerald-100 bg-emerald-50/80 py-8">
-            <div class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 text-sm text-emerald-800 md:flex-row md:items-center md:justify-between md:px-6">
+            <div
+                class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 text-sm text-emerald-800 md:flex-row md:items-center md:justify-between md:px-6"
+            >
                 <div>
                     <p class="font-semibold">Huduma Ya Raia</p>
                     <p class="text-emerald-700/80">Digitising Kenya’s public participation experience.</p>

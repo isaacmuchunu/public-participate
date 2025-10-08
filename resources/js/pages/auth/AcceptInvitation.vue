@@ -61,9 +61,7 @@ const roleDisplay = roleDisplayNames[props.user.role] || props.user.role;
                         required
                     />
                     <InputError :message="errors.password" />
-                    <p class="text-xs text-muted-foreground">
-                        Must be at least 8 characters with uppercase, lowercase, and numbers
-                    </p>
+                    <p class="text-muted-foreground text-xs">Must be at least 8 characters with uppercase, lowercase, and numbers</p>
                 </div>
 
                 <div class="grid gap-2">
@@ -87,7 +85,7 @@ const roleDisplay = roleDisplayNames[props.user.role] || props.user.role;
             </div>
         </Form>
 
-        <div class="mt-6 text-center text-xs text-muted-foreground">
+        <div class="text-muted-foreground mt-6 text-center text-xs">
             <p>By activating your account, you agree to the platform's terms of service.</p>
         </div>
     </AuthLayout>

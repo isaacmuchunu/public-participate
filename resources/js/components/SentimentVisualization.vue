@@ -75,15 +75,15 @@ const getSentimentBadgeVariant = (score: number) => {
         <CardContent class="space-y-6">
             <!-- Loading State -->
             <div v-if="loading" class="flex items-center justify-center p-8">
-                <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
-                <span class="ml-2 text-sm text-muted-foreground">Analyzing sentiment...</span>
+                <div class="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
+                <span class="text-muted-foreground ml-2 text-sm">Analyzing sentiment...</span>
             </div>
 
             <!-- No Data State -->
             <div v-else-if="!data" class="p-8 text-center">
-                <Icon name="bar-chart-3" class="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                <Icon name="bar-chart-3" class="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                 <p class="text-muted-foreground">No sentiment data available yet</p>
-                <p class="mt-1 text-sm text-muted-foreground">Sentiment analysis will appear once there are enough comments to analyze</p>
+                <p class="text-muted-foreground mt-1 text-sm">Sentiment analysis will appear once there are enough comments to analyze</p>
             </div>
 
             <!-- Sentiment Data -->
@@ -95,7 +95,7 @@ const getSentimentBadgeVariant = (score: number) => {
                         <span class="text-lg font-semibold">{{ sentimentLabel }}</span>
                     </div>
                     <Badge :variant="getSentimentBadgeVariant(sentimentScore)"> Score: {{ sentimentScore.toFixed(2) }} </Badge>
-                    <p class="mt-2 text-sm text-muted-foreground">Based on {{ data.total }} comments</p>
+                    <p class="text-muted-foreground mt-2 text-sm">Based on {{ data.total }} comments</p>
                 </div>
 
                 <!-- Sentiment Breakdown -->
@@ -104,7 +104,7 @@ const getSentimentBadgeVariant = (score: number) => {
                         <div class="text-2xl font-bold text-green-600">
                             {{ formatPercentage(data.positive) }}
                         </div>
-                        <div class="text-sm text-muted-foreground">Positive</div>
+                        <div class="text-muted-foreground text-sm">Positive</div>
                         <div class="mt-1 flex items-center justify-center gap-1">
                             <TrendingUp class="h-3 w-3 text-green-600" />
                             <span class="text-xs text-green-600">
@@ -117,7 +117,7 @@ const getSentimentBadgeVariant = (score: number) => {
                         <div class="text-2xl font-bold text-gray-600">
                             {{ formatPercentage(data.neutral) }}
                         </div>
-                        <div class="text-sm text-muted-foreground">Neutral</div>
+                        <div class="text-muted-foreground text-sm">Neutral</div>
                         <div class="mt-1 flex items-center justify-center gap-1">
                             <Minus class="h-3 w-3 text-gray-600" />
                             <span class="text-xs text-gray-600">
@@ -130,7 +130,7 @@ const getSentimentBadgeVariant = (score: number) => {
                         <div class="text-2xl font-bold text-red-600">
                             {{ formatPercentage(data.negative) }}
                         </div>
-                        <div class="text-sm text-muted-foreground">Negative</div>
+                        <div class="text-muted-foreground text-sm">Negative</div>
                         <div class="mt-1 flex items-center justify-center gap-1">
                             <TrendingDown class="h-3 w-3 text-red-600" />
                             <span class="text-xs text-red-600">
@@ -144,10 +144,10 @@ const getSentimentBadgeVariant = (score: number) => {
                 <div class="space-y-2">
                     <h4 class="text-sm font-medium">Recent Trends</h4>
                     <div class="grid grid-cols-1 gap-2">
-                        <div class="flex items-center justify-between rounded bg-muted/50 p-2">
+                        <div class="bg-muted/50 flex items-center justify-between rounded p-2">
                             <span class="text-sm">Positive sentiment</span>
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-16 overflow-hidden rounded-full bg-muted">
+                                <div class="bg-muted h-2 w-16 overflow-hidden rounded-full">
                                     <div
                                         class="h-full bg-green-500 transition-all"
                                         :style="{ width: `${Math.min(100, data.trends.positive_trend * 100)}%` }"
@@ -159,10 +159,10 @@ const getSentimentBadgeVariant = (score: number) => {
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between rounded bg-muted/50 p-2">
+                        <div class="bg-muted/50 flex items-center justify-between rounded p-2">
                             <span class="text-sm">Neutral sentiment</span>
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-16 overflow-hidden rounded-full bg-muted">
+                                <div class="bg-muted h-2 w-16 overflow-hidden rounded-full">
                                     <div
                                         class="h-full bg-gray-500 transition-all"
                                         :style="{ width: `${Math.min(100, data.trends.neutral_trend * 100)}%` }"
@@ -174,10 +174,10 @@ const getSentimentBadgeVariant = (score: number) => {
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between rounded bg-muted/50 p-2">
+                        <div class="bg-muted/50 flex items-center justify-between rounded p-2">
                             <span class="text-sm">Negative sentiment</span>
                             <div class="flex items-center gap-2">
-                                <div class="h-2 w-16 overflow-hidden rounded-full bg-muted">
+                                <div class="bg-muted h-2 w-16 overflow-hidden rounded-full">
                                     <div
                                         class="h-full bg-red-500 transition-all"
                                         :style="{ width: `${Math.min(100, data.trends.negative_trend * 100)}%` }"
@@ -192,7 +192,7 @@ const getSentimentBadgeVariant = (score: number) => {
                 </div>
 
                 <!-- Disclaimer -->
-                <div class="rounded bg-muted/30 p-3 text-xs text-muted-foreground">
+                <div class="bg-muted/30 text-muted-foreground rounded p-3 text-xs">
                     <p>
                         <strong>Note:</strong> Sentiment analysis is powered by AI and may not always be 100% accurate. This is for informational
                         purposes only and should not be considered official analysis.

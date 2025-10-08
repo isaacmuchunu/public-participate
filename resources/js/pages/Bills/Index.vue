@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import StatusBadge from '@/components/StatusBadge.vue';
+import ScreenReaderAnnouncement from '@/components/ScreenReaderAnnouncement.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { Input } from '@/components/ui/input';
+import { useBillFiltering } from '@/composables/useBillFiltering';
+import { usePagination } from '@/composables/usePagination';
+import { useI18n } from '@/composables/useI18n';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import * as billRoutes from '@/routes/bills';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { computed, reactive } from 'vue';
+import { useInfiniteScroll } from '@vueuse/core';
+import { computed, ref, watch } from 'vue';
 
 interface BillSummary {
     simplified_summary_en: string | null;
@@ -40,20 +46,27 @@ interface PaginationLink {
     active: boolean;
 }
 
+interface PaginatedBills {
+    data: BillItem[];
+    links: PaginationLink[];
+    total: number;
+    from: number | null;
+    to: number | null;
+    current_page?: number;
+    last_page?: number;
+    per_page?: number;
+}
+
+interface BillFiltersProps {
+    status?: string;
+    house?: string;
+    tag?: string;
+    search?: string;
+}
+
 interface Props {
-    bills: {
-        data: BillItem[];
-        links: PaginationLink[];
-        total: number;
-        from: number | null;
-        to: number | null;
-    };
-    filters: {
-        status?: string;
-        house?: string;
-        tag?: string;
-        search?: string;
-    };
+    bills: PaginatedBills;
+    filters: BillFiltersProps;
 }
 
 const props = defineProps<Props>();
@@ -61,121 +74,149 @@ const { t } = useI18n();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Bills',
+        title: t('bills.title'),
         href: billRoutes.index().url,
     },
 ];
 
-const filterForm = reactive({
-    status: props.filters?.status ?? 'all',
-    house: props.filters?.house ?? 'all',
-    tag: props.filters?.tag ?? 'all',
-    search: props.filters?.search ?? '',
+const {
+    filters,
+    hasActiveFilters,
+    applyFilters,
+    resetFilters,
+} = useBillFiltering(props.filters, {
+    defaultRoute: billRoutes.index,
+    visitOptions: {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+        only: ['bills'],
+    },
 });
 
-const hasResults = computed(() => props.bills.data.length > 0);
+const {
+    hasNextPage,
+    nextPageUrl,
+    navigateToUrl,
+    isLoading: isPaginating,
+    from,
+    to,
+    total,
+} = usePagination(() => props.bills, {
+    preserveScroll: true,
+    only: ['bills'],
+    replace: true,
+});
+
+const billItems = ref<BillItem[]>([...props.bills.data]);
+
+watch(
+    () => props.bills,
+    (newValue, oldValue) => {
+        const currentPage = newValue.current_page ?? 1;
+
+        if (!oldValue || (oldValue.current_page ?? 1) > currentPage || currentPage <= 1) {
+            billItems.value = [...newValue.data];
+            return;
+        }
+
+        const existingIds = new Set(billItems.value.map((bill) => bill.id));
+        const appended = newValue.data.filter((bill) => !existingIds.has(bill.id));
+
+        billItems.value = [...billItems.value, ...appended];
+    },
+    { deep: true },
+);
+
+const hasResults = computed(() => billItems.value.length > 0);
 
 const loadMoreRef = ref<HTMLElement | null>(null);
 
 useInfiniteScroll(
     loadMoreRef,
     () => {
-        const nextLink = props.bills.links.find((link) => link.label.includes('Next'));
-        if (nextLink && nextLink.url) {
-            router.visit(nextLink.url, {
-                preserveState: true,
-                preserveScroll: true,
-                only: ['bills'],
-                onSuccess: () => {
-                    // Bills will be merged automatically with Inertia.js merge props
-                },
-            });
+        if (isPaginating.value || !hasNextPage.value) {
+            return;
+        }
+
+        const url = nextPageUrl.value;
+
+        if (url) {
+            navigateToUrl(url);
         }
     },
     { distance: 200 },
 );
 
 const submitFilters = () => {
-    const query: Record<string, string> = {};
-
-    if (filterForm.status && filterForm.status !== 'all') {
-        query.status = filterForm.status;
-    }
-
-    if (filterForm.house && filterForm.house !== 'all') {
-        query.house = filterForm.house;
-    }
-
-    if (filterForm.tag && filterForm.tag !== 'all') {
-        query.tag = filterForm.tag;
-    }
-
-    if (filterForm.search) {
-        query.search = filterForm.search;
-    }
-
-    router.get(
-        billRoutes.index.url({
-            query,
-        }),
-        {},
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        },
-    );
+    applyFilters();
 };
 
-const resetFilters = () => {
-    filterForm.status = 'all';
-    filterForm.house = 'all';
-    filterForm.tag = 'all';
-    filterForm.search = '';
-
-    submitFilters();
+const handleResetFilters = () => {
+    resetFilters();
 };
 
-const statusBadgeClasses = (status: string) => {
-    switch (status) {
-        case 'open_for_participation':
-            return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300';
-        case 'closed':
-        case 'rejected':
-            return 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300';
-        case 'passed':
-            return 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300';
-        default:
-            return 'bg-muted text-muted-foreground';
+const fallbackLabel = (value: string) => value.replace(/_/g, ' ');
+
+const statusLabel = (status: string) => {
+    const key = `bills.status.${status}`;
+    const translated = t(key);
+    return translated === key ? fallbackLabel(status) : translated;
+};
+
+const houseLabel = (house: string) => {
+    const key = `bills.house.${house}`;
+    const translated = t(key);
+    return translated === key ? fallbackLabel(house) : translated;
+};
+
+const filterAnnouncement = computed(() => {
+    if (!total.value || total.value === 0) {
+        return t('common.no_results');
     }
+
+    const fromValue = from.value ?? 0;
+    const toValue = to.value ?? 0;
+
+    return t('common.showing', {
+        from: fromValue,
+        to: toValue,
+        total: total.value,
+    });
+});
+
+const prefetchBill = (billId: number) => {
+    router.visit(billRoutes.show({ bill: billId }).url, {
+        only: ['bill'],
+        preserveState: true,
+        preserveScroll: true,
+        onBefore: () => false,
+    });
 };
-
-const formatLabel = (value: string) => value.split('_').join(' ');
-
-const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').replaceAll('&raquo;', '»');
 </script>
 
 <template>
-    <Head title="Bills" />
+    <Head :title="t('bills.title')" />
 
     <PublicLayout :breadcrumbs="breadcrumbs">
         <div class="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-12 md:px-6">
             <header class="flex flex-col gap-3 text-emerald-900">
-                <h1 class="text-3xl leading-tight font-semibold">{{ t('bills.title') }}</h1>
+                <h1 class="text-3xl font-semibold leading-tight">{{ t('bills.title') }}</h1>
                 <p class="max-w-2xl text-base text-emerald-800/80">
                     Review current legislation, understand its public impact, and raise your voice before participation windows close.
                 </p>
             </header>
 
             <section class="rounded-2xl border border-emerald-100/70 bg-white/80 p-6 shadow-sm backdrop-blur">
+                <ScreenReaderAnnouncement :message="filterAnnouncement" priority="polite" />
                 <form class="grid gap-4 md:grid-cols-4" @submit.prevent="submitFilters">
                     <div class="space-y-2">
-                        <label for="search" class="text-sm font-semibold text-emerald-900">Search</label>
+                        <label for="search" class="text-sm font-semibold text-emerald-900">{{ t('common.search') }}</label>
                         <Input
                             id="search"
-                            v-model="filterForm.search"
+                            v-model="filters.search"
                             type="search"
-                            placeholder="Search by title or number"
+                            :placeholder="t('accessibility.searchBills')"
                             class="h-11 rounded-lg border border-emerald-200/80 bg-white/80 text-emerald-900"
                         />
                     </div>
@@ -184,8 +225,8 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
                         <label for="status" class="text-sm font-semibold text-emerald-900">Status</label>
                         <select
                             id="status"
-                            v-model="filterForm.status"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            v-model="filters.status"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All statuses</option>
                             <option value="draft">Draft</option>
@@ -202,8 +243,8 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
                         <label for="house" class="text-sm font-semibold text-emerald-900">House</label>
                         <select
                             id="house"
-                            v-model="filterForm.house"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            v-model="filters.house"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All houses</option>
                             <option value="national_assembly">National Assembly</option>
@@ -216,8 +257,8 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
                         <label for="tag" class="text-sm font-semibold text-emerald-900">Tag</label>
                         <select
                             id="tag"
-                            v-model="filterForm.tag"
-                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 transition outline-none focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
+                            v-model="filters.tag"
+                            class="h-11 w-full rounded-lg border border-emerald-200/80 bg-white/80 px-3 text-sm text-emerald-900 outline-none transition focus-visible:border-emerald-400 focus-visible:ring-[3px] focus-visible:ring-emerald-200"
                         >
                             <option value="all">All tags</option>
                             <option value="governance">Governance</option>
@@ -233,20 +274,19 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
                             type="submit"
                             class="h-11 rounded-full bg-emerald-600 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
                         >
-                            Apply filters
+                            {{ t('common.filter') }}
                         </Button>
                         <Button
+                            v-if="hasActiveFilters"
                             type="button"
                             variant="outline"
                             class="h-11 rounded-full border-emerald-200 text-sm font-medium text-emerald-700 hover:border-emerald-400 hover:text-emerald-800"
-                            @click="resetFilters"
+                            @click="handleResetFilters"
                         >
-                            Reset
+                            {{ t('common.reset') }}
                         </Button>
-                        <div class="ml-auto flex items-center gap-2 text-sm text-emerald-800/80">
-                            <span>{{ props.bills.from ?? 0 }}-{{ props.bills.to ?? 0 }}</span>
-                            <span>of</span>
-                            <span>{{ props.bills.total }}</span>
+                        <div class="ml-auto text-sm text-emerald-800/80">
+                            {{ filterAnnouncement }}
                         </div>
                     </div>
                 </form>
@@ -255,18 +295,16 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
             <section class="flex-1">
                 <div v-if="hasResults" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     <article
-                        v-for="bill in props.bills.data"
+                        v-for="bill in billItems"
                         :key="bill.id"
                         class="flex h-full flex-col gap-4 rounded-2xl border border-emerald-100/70 bg-white/90 p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg"
                     >
                         <header class="flex flex-col gap-1">
                             <div class="flex items-center justify-between gap-4">
                                 <h2 class="text-lg font-semibold text-emerald-900">{{ bill.title }}</h2>
-                                <span class="rounded-full px-3 py-1 text-xs font-medium capitalize" :class="statusBadgeClasses(bill.status)">
-                                    {{ formatLabel(bill.status) }}
-                                </span>
+                                <StatusBadge :status="bill.status" :label="statusLabel(bill.status)" />
                             </div>
-                            <p class="text-sm text-emerald-800/70">Bill {{ bill.bill_number }} • {{ formatLabel(bill.house) }}</p>
+                            <p class="text-sm text-emerald-800/70">Bill {{ bill.bill_number }} • {{ houseLabel(bill.house) }}</p>
                         </header>
 
                         <p v-if="bill.summary?.simplified_summary_en" class="line-clamp-3 text-sm text-emerald-800/80">
@@ -281,15 +319,22 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
 
                         <footer class="flex items-center justify-between gap-3">
                             <div class="flex flex-col text-xs text-emerald-800/70">
-                                <span>Submissions: {{ bill.submissions_count }}</span>
+                                <span>
+                                    {{
+                                        bill.submissions_count === 1
+                                            ? t('accessibility.submissionCountSingular')
+                                            : t('accessibility.submissionCount', { count: bill.submissions_count })
+                                    }}
+                                </span>
                                 <span v-if="bill.participation_end_date"> Participation closes {{ bill.participation_end_date }} </span>
                             </div>
 
                             <Link
                                 :href="billRoutes.show({ bill: bill.id }).url"
                                 class="text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+                                @mouseenter="prefetchBill(bill.id)"
                             >
-                                View details
+                                {{ t('bills.view_details') }}
                             </Link>
                         </footer>
                     </article>
@@ -300,31 +345,20 @@ const paginationLabel = (label: string) => label.replaceAll('&laquo;', '«').rep
                     class="flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-white/90 p-10 text-center text-emerald-800/70"
                 >
                     <div>
-                        <p class="font-medium">No bills found</p>
-                        <p class="mt-2 text-sm">Adjust your filters or check back later for newly published bills.</p>
+                        <p class="font-medium">{{ t('bills.no_bills') }}</p>
+                        <p class="mt-2 text-sm">{{ t('bills.no_bills_description') }}</p>
                     </div>
                 </div>
             </section>
 
-            <nav v-if="hasResults && props.bills.links.length > 1" class="flex items-center justify-center gap-2">
-                <Link
-                    v-for="link in props.bills.links"
-                    :key="link.label"
-                    :href="link.url ?? '#'"
-                    :class="[
-                        'rounded-full px-4 py-2 text-sm transition',
-                        link.active ? 'bg-emerald-600 text-white shadow-sm' : 'text-emerald-700 hover:bg-emerald-50',
-                        !link.url && 'pointer-events-none opacity-50',
-                    ]"
-                >
-                    {{ paginationLabel(link.label) }}
-                </Link>
-            </nav>
-
             <!-- Infinite scroll trigger -->
             <div v-if="hasResults" ref="loadMoreRef" class="flex h-20 items-center justify-center">
-                <div v-if="props.bills.links.find((link) => link.label.includes('Next'))" class="animate-pulse text-sm text-muted-foreground">
-                    Loading more bills...
+                <div v-if="hasNextPage" class="flex items-center gap-2 text-sm text-emerald-700">
+                    <span class="h-4 w-4 animate-spin rounded-full border-2 border-emerald-700 border-t-transparent" aria-hidden="true"></span>
+                    <span>{{ t('common.loading') }}</span>
+                </div>
+                <div v-else class="text-sm text-emerald-700/70">
+                    {{ t('bills.all_loaded') }}
                 </div>
             </div>
         </div>

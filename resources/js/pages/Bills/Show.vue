@@ -5,7 +5,9 @@ import * as billRoutes from '@/routes/bills';
 import * as submissionRoutes from '@/routes/submissions';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, Suspense } from 'vue';
+import ClauseReader from '@/components/clause-reader/ClauseReader.vue';
+import SentimentVisualization from '@/components/SentimentVisualization.vue';
 
 interface SubmissionUser {
     id: number;
@@ -285,23 +287,28 @@ const pdfUrl = computed(() => {
             </section>
 
             <!-- Sentiment Analysis Section -->
-            <section class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
+            <section v-if="sentiment" class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
                 <SentimentVisualization :data="sentiment" :loading="false" :bill-title="bill.title" />
             </section>
 
             <!-- Clause Reader Section -->
             <section class="rounded-2xl border border-emerald-100/70 bg-white/95 p-6 shadow-sm backdrop-blur">
-                <header class="mb-4">
-                    <h2 class="text-xl font-semibold text-emerald-900">Read and Comment on Clauses</h2>
-                    <p class="text-sm text-emerald-800/80">Review each clause and share your thoughts</p>
+                <header class="mb-6">
+                    <h2 class="text-2xl font-semibold text-emerald-900">Read and Comment on Clauses</h2>
+                    <p class="mt-2 text-sm text-emerald-800/80">
+                        Review each clause carefully and share your thoughts, concerns, or suggestions on specific sections of the bill.
+                    </p>
                 </header>
 
                 <Suspense>
                     <ClauseReader :bill="bill" :clauses="clauses" :can-comment="true" />
                     <template #fallback>
-                        <div class="flex items-center justify-center p-8">
-                            <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-600"></div>
-                            <span class="ml-2 text-sm text-muted-foreground">Loading clauses...</span>
+                        <div class="flex flex-col items-center justify-center gap-4 p-12">
+                            <div class="h-12 w-12 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600"></div>
+                            <div class="text-center">
+                                <p class="text-sm font-medium text-emerald-900">Loading clauses...</p>
+                                <p class="mt-1 text-xs text-emerald-800/70">Please wait while we prepare the bill content</p>
+                            </div>
                         </div>
                     </template>
                 </Suspense>

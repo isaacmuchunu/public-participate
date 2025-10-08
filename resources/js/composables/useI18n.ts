@@ -7,14 +7,8 @@ export function useI18n() {
         locale.value = newLocale;
         localStorage.setItem('locale', newLocale);
         document.documentElement.lang = newLocale;
+        document.documentElement.setAttribute('lang', newLocale);
     };
-
-    // Load saved locale on init
-    const savedLocale = localStorage.getItem('locale') as 'en' | 'sw' | null;
-    if (savedLocale && availableLocales.includes(savedLocale)) {
-        locale.value = savedLocale;
-        document.documentElement.lang = savedLocale;
-    }
 
     return { t, locale, setLocale, availableLocales };
 }

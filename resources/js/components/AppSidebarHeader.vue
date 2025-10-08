@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import LanguageToggle from '@/components/LanguageToggle.vue';
 import NotificationBell from '@/components/NotificationBell.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
@@ -66,7 +67,7 @@ const primaryAction = computed<PrimaryAction | null>(() => {
 
 <template>
     <header
-        class="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+        class="border-sidebar-border/70 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-16 shrink-0 items-center gap-2 border-b px-6 transition-[width,height] ease-linear md:px-4"
     >
         <div class="flex flex-1 items-center gap-2">
             <SidebarTrigger class="-ml-1" />
